@@ -1,4 +1,3 @@
-## Welcome to the Offical Pedro Pathing Quickstart!  
+## Team 8902's Into the Deep Code
 
-Follow the steps on our [website](https://pedropathing.com/) to tune and setup!  
-Feel Free to reach out on the [Offical Pedro Pathing Discord Server](https://discord.gg/2GfC4qBP5s)!
+Follow us on instagram! @cosmicgoose8902
