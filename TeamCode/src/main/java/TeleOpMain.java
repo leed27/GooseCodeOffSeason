@@ -56,7 +56,7 @@ public class TeleOpMain extends LinearOpMode {
         leftFront.setDirection(DcMotorEx.Direction.REVERSE);
         leftRear.setDirection(DcMotorEx.Direction.REVERSE);
 
-        right_horizontal.setDirection(DcMotorEx.Direction.REVERSE);
+        right_horizontal.setDirection(DcMotorEx.Direction.FORWARD);
         left_horizontal.setDirection(DcMotorEx.Direction.FORWARD);
 
         right_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -82,26 +82,20 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.update();
 
                 if (gamepad2.triangle) {
-                    move(4000, false);
+                    move(740, false);
+                    flip_floor.setPosition(0);
+                    rotate_floor.setPosition(0.5);
                 } else if (gamepad2.circle) {
-                    move(1825, false);
+                    move(350, false);
                 } else if (gamepad2.cross) {
-                    move(1500, false);
+                    move(200, false);
                 } else if(gamepad2.square){
+                    flip_floor.setPosition(1);
                     drawerTimer.reset();
                     move(0, false);
                     if(drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 2){
                         settle_slides();
                     }
-                }
-                else if(gamepad2.right_bumper){
-                    move(600, false);
-                }
-                else if (gamepad1.cross){
-                    move(600, false);
-                }
-                else if(gamepad1.circle){
-                    move(right_horizontal.getCurrentPosition() + 100, false);
                 }
                 else if(gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
                     move(gamepad2.left_trigger - gamepad2.right_trigger, true);
@@ -114,7 +108,25 @@ public class TeleOpMain extends LinearOpMode {
                     }
                 }
 
+
+//                else if(gamepad1.circle){
+//                    move(right_horizontal.getCurrentPosition() + 100, false);
+//                }
+
                 //GAMEPAD1 CONTROLS
+                //drivetrain, rotate_front, pinch_front,
+                // all chamber controls - flipping should be macro with open / close
+
+                //GAMEPAD1 CONTROLS
+                //flip_front, horizontal slides, hang
+
+                if(gamepad1.right_bumper){
+                    pinch_floor.setPosition(1);
+                }
+
+                if(gamepad1.left_bumper){
+                    pinch_floor.setPosition(0);
+                }
 
                 //drivetrain
                 rightFront.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
@@ -122,7 +134,6 @@ public class TeleOpMain extends LinearOpMode {
                 rightRear.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
                 leftRear.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
 
-                //servos
 
             }
 

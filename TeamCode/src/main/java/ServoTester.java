@@ -1,5 +1,6 @@
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //@Disabled
 public class ServoTester extends LinearOpMode {
 
-    private ServoImplEx rotate_floor, pinch_floor, flip_floor, extendL;
+    private ServoImplEx rotate_floor, pinch_floor, flip_floor;
 
     @Override
     public void runOpMode() {
@@ -32,17 +33,19 @@ public class ServoTester extends LinearOpMode {
                 telemetry.update();
 
 
+
+
                 //FLIP
                 if(gamepad1.triangle){
                     flip_floor.setPosition(1);
                 }
 
                 if(gamepad1.cross){
-                    flip_floor.setPosition(0);
+                    flip_floor.setPosition(0); //down position
                 }
 
                 if(gamepad1.square){
-                    flip_floor.setPosition(0.5);
+                    flip_floor.setPosition(0.5); // up pos
                 }
 
                 //ROTATE
@@ -55,10 +58,16 @@ public class ServoTester extends LinearOpMode {
                     rotate_floor.setPosition(1);
                 }
 
+                if(gamepad1.circle){
+                    rotate_floor.setPosition(0.52);
+                }
+
+                //rotate:  start pos = 0.5
+
                 //PINCH
 
                 if(gamepad1.dpad_up){
-                    pinch_floor.setPosition(1);
+                    pinch_floor.setPosition(1); //close
                 }
 
                 if(gamepad1.dpad_down){
@@ -66,7 +75,7 @@ public class ServoTester extends LinearOpMode {
                 }
 
                 if(gamepad1.dpad_left){
-                    pinch_floor.setPosition(0.5);
+                    pinch_floor.setPosition(0.5); //open
                 }
 
 
