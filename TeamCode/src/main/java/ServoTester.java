@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //@Disabled
 public class ServoTester extends LinearOpMode {
 
-    private ServoImplEx rotate_floor, pinch_floor, flip_floor;
+    private ServoImplEx rotate_floor, pinch_floor, flip_floor, right_swing, left_swing, rotate_chamber, pinch_chamber;
 
     @Override
     public void runOpMode() {
@@ -19,6 +19,10 @@ public class ServoTester extends LinearOpMode {
         rotate_floor = hardwareMap.get(ServoImplEx.class, "rotate_floor");
         pinch_floor = hardwareMap.get(ServoImplEx.class, "pinch_floor");
         flip_floor = hardwareMap.get(ServoImplEx.class, "flip_floor");
+        right_swing = hardwareMap.get(ServoImplEx.class, "right_swing");
+        left_swing = hardwareMap.get(ServoImplEx.class, "left_swing");
+        rotate_chamber = hardwareMap.get(ServoImplEx.class, "rotate_chamber");
+        pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
         telemetry.update();
 
         waitForStart();
@@ -29,7 +33,7 @@ public class ServoTester extends LinearOpMode {
                 telemetry.addData("Status", "Running");
                 telemetry.addData("flip: ", flip_floor.getPosition());
                 telemetry.addData("rotate: ", rotate_floor.getPosition());
-                telemetry.addData("pinch: ", pinch_floor.getPosition());
+                telemetry.addData("pinch: ", pinch_chamber.getPosition());
                 telemetry.update();
 
 
@@ -59,10 +63,8 @@ public class ServoTester extends LinearOpMode {
                 }
 
                 if(gamepad1.circle){
-                    rotate_floor.setPosition(0.52);
+                    rotate_floor.setPosition(0.52); //start pos
                 }
-
-                //rotate:  start pos = 0.5
 
                 //PINCH
 
@@ -77,6 +79,43 @@ public class ServoTester extends LinearOpMode {
                 if(gamepad1.dpad_left){
                     pinch_floor.setPosition(0.5); //open
                 }
+
+                //GAMEPAD2 CONTROLS
+
+                if(gamepad2.triangle){
+                    rotate_chamber.setPosition(0);
+                }
+
+                if(gamepad2.cross){
+                    rotate_chamber.setPosition(1);
+                }
+
+                if(gamepad2.circle){
+                    rotate_chamber.setPosition(0.5);
+                }
+
+                if(gamepad2.dpad_up){
+                    pinch_chamber.setPosition(0.95);
+                }
+
+                if(gamepad2.dpad_down){
+                    pinch_chamber.setPosition(0);
+                }
+
+                if(gamepad2.dpad_left){
+                    pinch_chamber.setPosition(0.5);
+                }
+
+                if(gamepad2.right_bumper){
+                    left_swing.setPosition(0); // down
+                    right_swing.setPosition(0);
+                }
+
+                if(gamepad2.left_bumper){
+                    right_swing.setPosition(0.60);
+                    left_swing.setPosition(0.60); // score
+                }
+
 
 
             }
