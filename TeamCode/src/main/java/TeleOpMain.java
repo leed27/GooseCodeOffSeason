@@ -91,6 +91,10 @@ public class TeleOpMain extends LinearOpMode {
                 //GAMEPAD1 CONTROLS
                 //flip_front, horizontal slides, hang
 
+                //TO DO:
+                //  set servos to correct positions on initialization
+                //  get timing right for when slides are coming in
+
                 telemetry.update();
 
                 if (gamepad2.triangle) {
