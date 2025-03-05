@@ -34,11 +34,10 @@ public class TeleOpOld extends LinearOpMode {
     int notPressed = 0;
 
     public enum state {
-        PRESET,
-        CUSTOM
+        DRIVE
     };
 
-    state drawerState = state.PRESET;
+    state driveState = state.DRIVE;
 
     ElapsedTime drawerTimer = new ElapsedTime();
     ElapsedTime servoTimer = new ElapsedTime();
@@ -94,7 +93,7 @@ public class TeleOpOld extends LinearOpMode {
 
         servoTimer.reset();
         telemetry.update();
-        drawerState = state.PRESET;
+        driveState = state.DRIVE;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

@@ -32,6 +32,13 @@ public class TeleOpMain extends LinearOpMode {
 
     int h = 0;
 
+    public enum state {
+        DRIVE_FORWARD,
+        DRIVE_BACK
+    };
+
+    state driveState = state.DRIVE_FORWARD;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -46,11 +53,14 @@ public class TeleOpMain extends LinearOpMode {
 
         right_horizontal = hardwareMap.get(DcMotorEx.class, "right_horizontal");
         left_horizontal = hardwareMap.get(DcMotorEx.class, "left_horizontal");
+
         rotate_floor = hardwareMap.get(ServoImplEx.class, "rotate_floor");
         pinch_floor = hardwareMap.get(ServoImplEx.class, "pinch_floor");
         flip_floor = hardwareMap.get(ServoImplEx.class, "flip_floor");
+
         right_swing = hardwareMap.get(ServoImplEx.class, "right_swing");
         left_swing = hardwareMap.get(ServoImplEx.class, "left_swing");
+
         rotate_chamber = hardwareMap.get(ServoImplEx.class, "rotate_chamber");
         pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
 
@@ -72,8 +82,20 @@ public class TeleOpMain extends LinearOpMode {
         servoTimer.reset();
         telemetry.update();
 
+        driveState = state.DRIVE_FORWARD;
+        
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        if(opModeInInit()){
+            rotate_floor.setPosition(0.5);
+            flip_floor.setPosition(0.5);
+            rotate_chamber.setPosition(0);
+            pinch_chamber.setPosition(0.5);
+
+            right_swing.setPosition(0.07);
+            left_swing.setPosition(0.07);
+        }
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -92,30 +114,38 @@ public class TeleOpMain extends LinearOpMode {
                 //flip_front, horizontal slides, hang
 
                 //TO DO:
-                //  set servos to correct positions on initialization
-                //  get timing right for when slides are coming in
+                //  fix power drop issue
 
                 telemetry.update();
 
                 if (gamepad2.triangle) {
-                    move(740, false);
+                    move(700, false);
                     if (right_horizontal.getCurrentPosition() > 650) {
-                        flip_floor.setPosition(0);
                         rotate_floor.setPosition(0.5);
                     }
                 } else if (gamepad2.circle) {
-                    move(350, false);
-                } else if (gamepad2.cross) {
-                    move(200, false);
-                } else if (gamepad2.square) {
-                    rotate_floor.setPosition(0.5);
-                    if (right_horizontal.getCurrentPosition() < 650) {
-                        flip_floor.setPosition(0.5);
+                    move(450, false);
+                    if (right_horizontal.getCurrentPosition() > 200) {
+                        rotate_floor.setPosition(0.5);
                     }
+                } else if (gamepad2.cross) {
+                    move(250, false);
+                    if (right_horizontal.getCurrentPosition() > 100) {
+                        rotate_floor.setPosition(0.5);
+                    }
+                } else if (gamepad2.square) {
                     drawerTimer.reset();
-                    move(0, false);
-                    if (drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 2) {
-                        settle_slides();
+                    rotate_floor.setPosition(0.5);
+                    flip_floor.setPosition(0.5);
+                    while(gamepad2.square){
+                        if(drawerTimer.seconds() > 0.2){
+                            move(0, false);
+                        }
+
+                        if (drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 2) {
+                            settle_slides();
+                            break;
+                        }
                     }
                 } else if (gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
                     move(gamepad2.left_trigger - gamepad2.right_trigger, true);
@@ -127,12 +157,23 @@ public class TeleOpMain extends LinearOpMode {
                     }
                 }
 
+                if(gamepad2.left_bumper){
+                    flip_floor.setPosition(0.1);
+                }
+
+                if(gamepad2.right_bumper){
+                    flip_floor.setPosition(0.5);
+                }
+
+
+                //GAMEPAD 1 CONTROLS
+
                 if (gamepad1.right_bumper) {
-                    pinch_floor.setPosition(1);
+                    pinch_floor.setPosition(1); //close
                 }
 
                 if (gamepad1.left_bumper) {
-                    pinch_floor.setPosition(0.5);
+                    pinch_floor.setPosition(0.4); //open
                 }
 
                 if (gamepad1.right_trigger > 0) {
@@ -142,7 +183,7 @@ public class TeleOpMain extends LinearOpMode {
 
                         if (servoTimer.seconds() > 0.15) {
                             right_swing.setPosition(0.52);
-                            left_swing.setPosition(0.52); // score
+                            left_swing.setPosition(0.52); //prep score
                         }
 
                         if (servoTimer.seconds() > 0.25) {
@@ -203,10 +244,29 @@ public class TeleOpMain extends LinearOpMode {
 
 
                 //drivetrain
-                rightFront.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
-                leftFront.setPower(((-gamepad1.left_stick_y + gamepad1.left_stick_x)) + ((gamepad1.right_stick_x)));
-                rightRear.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
-                leftRear.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+                switch(driveState){
+                    case DRIVE_FORWARD:
+                        rightFront.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+                        leftFront.setPower(((-gamepad1.left_stick_y + gamepad1.left_stick_x)) + ((gamepad1.right_stick_x)));
+                        rightRear.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+                        leftRear.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+
+                        if(gamepad1.left_stick_button){
+                            driveState = state.DRIVE_BACK;
+                        }
+                        break;
+                    case DRIVE_BACK:
+                        rightFront.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (-gamepad1.right_stick_x));
+                        leftFront.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + ((-gamepad1.right_stick_x)));
+                        rightRear.setPower(((-gamepad1.left_stick_y + gamepad1.left_stick_x)) + (-gamepad1.right_stick_x));
+                        leftRear.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (-gamepad1.right_stick_x));
+                        if(gamepad1.left_stick_button){
+                            driveState = state.DRIVE_FORWARD;
+                        }
+                        break;
+                    default:
+                        driveState = state.DRIVE_FORWARD;
+                }
 
 
             }
