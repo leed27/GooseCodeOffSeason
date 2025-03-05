@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class MotorMech2 {
-    public DcMotorEx left_horizontal, right_horizontal, hang;
+    public DcMotorEx left_horizontal, right_horizontal;
     public int targetPosition;
 
     public double power = 0;
@@ -22,13 +22,6 @@ public class MotorMech2 {
         right_horizontal.setDirection(DcMotorEx.Direction.REVERSE);
         left_horizontal.setDirection(DcMotorEx.Direction.FORWARD);
         resetEncoders();
-
-        hang = hardwareMap.get(DcMotorEx.class, "hang");
-        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hang.setTargetPosition(0);
-        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hang.setDirection(DcMotorEx.Direction.REVERSE);
 
 
         targetPosition = 0;
@@ -114,10 +107,6 @@ public class MotorMech2 {
 
     public double getAmpsLeft(){return left_horizontal.getCurrent(CurrentUnit.AMPS);}
     public double getAmpsRight(){return right_horizontal.getCurrent(CurrentUnit.AMPS);}
-
-    public void setHang(){
-        movevertically(hang, 1800, 1);
-    }
 
 
     public void movevertically(DcMotorEx lipsey, int position, double power) {

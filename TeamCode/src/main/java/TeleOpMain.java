@@ -142,7 +142,7 @@ public class TeleOpMain extends LinearOpMode {
                             move(0, false);
                         }
 
-                        if (drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 2) {
+                        if (drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 0.5) {
                             settle_slides();
                             break;
                         }
@@ -251,16 +251,18 @@ public class TeleOpMain extends LinearOpMode {
                         rightRear.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
                         leftRear.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
 
-                        if(gamepad1.left_stick_button){
+                        if(gamepad1.triangle){
                             driveState = state.DRIVE_BACK;
                         }
+
                         break;
                     case DRIVE_BACK:
-                        rightFront.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (-gamepad1.right_stick_x));
-                        leftFront.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + ((-gamepad1.right_stick_x)));
-                        rightRear.setPower(((-gamepad1.left_stick_y + gamepad1.left_stick_x)) + (-gamepad1.right_stick_x));
-                        leftRear.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (-gamepad1.right_stick_x));
-                        if(gamepad1.left_stick_button){
+                        rightFront.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+                        leftFront.setPower(((gamepad1.left_stick_y + -gamepad1.left_stick_x)) + ((gamepad1.right_stick_x)));
+                        rightRear.setPower(((-gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+                        leftRear.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
+
+                        if(gamepad1.triangle){
                             driveState = state.DRIVE_FORWARD;
                         }
                         break;
