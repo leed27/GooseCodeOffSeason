@@ -20,6 +20,8 @@ public class TeleOpMain extends LinearOpMode {
 
     private DcMotorEx right_horizontal,left_horizontal; //slides
 
+    //private DcMotorEx hang;
+
     private ServoImplEx rotate_floor, pinch_floor, flip_floor, right_swing, left_swing, rotate_chamber, pinch_chamber;
 
     ElapsedTime drawerTimer = new ElapsedTime();
@@ -64,6 +66,8 @@ public class TeleOpMain extends LinearOpMode {
         rotate_chamber = hardwareMap.get(ServoImplEx.class, "rotate_chamber");
         pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
 
+        //hang = hardwareMap.get(DcMotorEx.class, "hang");
+
         telemetry.update();
 
         rightFront.setDirection(DcMotorEx.Direction.REVERSE);
@@ -76,6 +80,14 @@ public class TeleOpMain extends LinearOpMode {
 
         right_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        /*
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hang.setPower(0);
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang.setTargetPosition(0);
+        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         */
 
         reset();
 
@@ -107,14 +119,14 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData(" motor state: ", motorState);
 
                 //GAMEPAD1 CONTROLS
-                //drivetrain, rotate_front, pinch_front,
-                // all chamber controls - flipping should be macro with open / close
+                //  drivetrain, rotate_front, pinch_front,
+                //  all chamber controls - flipping should be macro with open / close
 
                 //GAMEPAD1 CONTROLS
-                //flip_front, horizontal slides, hang
+                //  flip_front, horizontal slides, hang
 
                 //TO DO:
-                //  fix power drop issue
+                //  program hang
 
                 telemetry.update();
 
@@ -149,13 +161,19 @@ public class TeleOpMain extends LinearOpMode {
                     }
                 } else if (gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
                     move(gamepad2.left_trigger - gamepad2.right_trigger, true);
-                } else if (gamepad2.dpad_up) {
-                    drawerTimer.reset();
-                    move(0, false);
-                    if (drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 2) {
-                        settle_slides();
-                    }
                 }
+
+                    /*
+                } else if (gamepad2.dpad_up) {
+                    hang.setPower(0.8);
+                }
+                else if(gamepad2.dpad_down){
+                    hang.setPower(-0.8);
+                }
+                else{
+                    hang.setPower(0);
+                }
+                     */
 
                 if(gamepad2.left_bumper){
                     flip_floor.setPosition(0.1);
