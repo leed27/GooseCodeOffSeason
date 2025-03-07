@@ -164,16 +164,24 @@ public class TeleOpMain extends LinearOpMode {
                 }
 
                     /*
-                } else if (gamepad2.dpad_up) {
+                } else if (gamepad2.right_bumper) {
                     hang.setPower(0.8);
                 }
-                else if(gamepad2.dpad_down){
+                else if(gamepad2.right_bumper){
                     hang.setPower(-0.8);
                 }
                 else{
                     hang.setPower(0);
                 }
                      */
+
+                if(gamepad2.dpad_up){
+                    rotate_chamber.setPosition(0.8);
+                }
+
+                if(gamepad2.dpad_down){
+                    rotate_chamber.setPosition(0);
+                }
 
                 if(gamepad2.left_bumper){
                     flip_floor.setPosition(0.1);
@@ -212,8 +220,8 @@ public class TeleOpMain extends LinearOpMode {
 
                 if (gamepad1.cross) {
                     servoTimer.reset();
-                    right_swing.setPosition(0.70);
-                    left_swing.setPosition(0.70); // score
+                    right_swing.setPosition(0.75);
+                    left_swing.setPosition(0.75); // score
 
                     while (gamepad1.cross) {
 
