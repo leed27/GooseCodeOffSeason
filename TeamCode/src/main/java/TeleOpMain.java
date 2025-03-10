@@ -20,7 +20,7 @@ public class TeleOpMain extends LinearOpMode {
 
     private DcMotorEx right_horizontal,left_horizontal; //slides
 
-    //private DcMotorEx hang;
+    private DcMotorEx right_hang, left_hang;
 
     private ServoImplEx rotate_floor, pinch_floor, flip_floor, right_swing, left_swing, rotate_chamber, pinch_chamber;
 
@@ -66,7 +66,8 @@ public class TeleOpMain extends LinearOpMode {
         rotate_chamber = hardwareMap.get(ServoImplEx.class, "rotate_chamber");
         pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
 
-        //hang = hardwareMap.get(DcMotorEx.class, "hang");
+        right_hang = hardwareMap.get(DcMotorEx.class, "right_hang");
+        left_hang = hardwareMap.get(DcMotorEx.class, "left_hang");
 
         telemetry.update();
 
@@ -81,15 +82,14 @@ public class TeleOpMain extends LinearOpMode {
         right_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        /*
-        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hang.setPower(0);
-        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setTargetPosition(0);
-        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-         */
+        right_hang.setDirection(DcMotorEx.Direction.FORWARD);
+        left_hang.setDirection(DcMotorEx.Direction.REVERSE);
+
+        right_hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left_hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         reset();
+        resetHang();
 
         servoTimer.reset();
         telemetry.update();
@@ -115,8 +115,10 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Status", "Running");
                 telemetry.addData("right_horizontal: ", right_horizontal.getCurrentPosition());
                 telemetry.addData("left_horizontal: ", left_horizontal.getCurrentPosition());
-                telemetry.addData("mode: ", right_horizontal.getMode());
-                telemetry.addData(" motor state: ", motorState);
+                telemetry.addData("right_hang: ", right_hang.getCurrentPosition());
+                telemetry.addData("left_hang: ", left_hang.getCurrentPosition());
+                //telemetry.addData("mode: ", right_horizontal.getMode());
+                //telemetry.addData("motor state: ", motorState);
 
                 //GAMEPAD1 CONTROLS
                 //  drivetrain, rotate_front, pinch_front,
@@ -149,8 +151,8 @@ public class TeleOpMain extends LinearOpMode {
                     drawerTimer.reset();
                     rotate_floor.setPosition(0.5);
                     flip_floor.setPosition(0.5);
-                    while(gamepad2.square){
-                        if(drawerTimer.seconds() > 0.2){
+                    while (gamepad2.square) {
+                        if (drawerTimer.seconds() > 0.2) {
                             move(0, false);
                         }
 
@@ -159,21 +161,31 @@ public class TeleOpMain extends LinearOpMode {
                             break;
                         }
                     }
-                } else if (gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
-                    move(gamepad2.left_trigger - gamepad2.right_trigger, true);
                 }
+//                } else if (gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
+//                    moveHang(gamepad2.left_trigger - gamepad2.right_trigger, true);
+//                }
+//                } else if(gamepad2.right_bumper) {
+//                    moveHang(1, true);
+//                }
+//                else if(gamepad2.left_bumper){
+//                    moveHang(-0.5, true);
+//                }
 
-                    /*
-                } else if (gamepad2.right_bumper) {
-                    hang.setPower(0.8);
+                if(gamepad2.right_trigger > 0){
+                    right_hang.setPower(1);
+                    left_hang.setPower(1);
                 }
-                else if(gamepad2.right_bumper){
-                    hang.setPower(-0.8);
+                else if(gamepad2.left_trigger > 0){
+                    right_hang.setPower(-1);
+                    left_hang.setPower(-1);
                 }
                 else{
-                    hang.setPower(0);
+                    right_hang.setPower(0);
+                    left_hang.setPower(0);
                 }
-                     */
+
+                //OTHER GAMEPAD2 CONTROLS
 
                 if(gamepad2.dpad_up){
                     rotate_chamber.setPosition(0.8);
@@ -190,7 +202,6 @@ public class TeleOpMain extends LinearOpMode {
                 if(gamepad2.right_bumper){
                     flip_floor.setPosition(0.5);
                 }
-
 
                 //GAMEPAD 1 CONTROLS
 
@@ -238,6 +249,7 @@ public class TeleOpMain extends LinearOpMode {
                 }
 
                 if(gamepad1.left_trigger > 0){
+                    //reset to wall
                     servoTimer.reset();
 
                     pinch_chamber.setPosition(0.5);
@@ -316,6 +328,20 @@ public class TeleOpMain extends LinearOpMode {
         left_horizontal.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void resetHang(){
+        right_hang.setPower(0);
+        left_hang.setPower(0);
+
+        right_hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        right_hang.setTargetPosition(0);
+        left_hang.setTargetPosition(0);
+
+        right_hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left_hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public void waitforDrawer(DcMotor george) {
         while(!(george.getCurrentPosition() > george.getTargetPosition() - errorBound && george.getCurrentPosition() < george.getTargetPosition() + errorBound));
     }
@@ -392,10 +418,45 @@ public class TeleOpMain extends LinearOpMode {
             setTargetPosition((int)movement);
         }
     }
+
+    public void moveHang(double movement, boolean byPower){
+        holding = false;
+        right_hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left_hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(movement > 0 && byPower){
+            setPower(movement);
+            left_hang.setTargetPosition(4000);
+            right_hang.setTargetPosition(4000);
+        }else if(movement < 0 && byPower){
+            setPower(-movement);
+            left_hang.setTargetPosition(0);
+            right_hang.setTargetPosition(0);
+        }else if(byPower){
+            holding = true;
+            setPower(1);
+            left_hang.setTargetPosition(right_hang.getCurrentPosition());
+            right_hang.setTargetPosition(right_hang.getCurrentPosition());
+        }else if(movement > 4000){
+            setPower(1);
+            left_hang.setTargetPosition(4000);
+            right_hang.setTargetPosition(4000);
+        }else if(movement < 0){
+            setPower(1);
+            left_hang.setTargetPosition(0);
+            right_hang.setTargetPosition(0);
+        }else{
+            setPower(1);
+            left_hang.setTargetPosition((int)movement);
+            right_hang.setTargetPosition((int)movement);
+        }
+    }
+
+
     public void setPower(double power){
         left_horizontal.setPower(power);
         right_horizontal.setPower(power);
     }
+
     public void setTargetPosition(int target){
         setPower(0.8);
         left_horizontal.setTargetPosition(target);

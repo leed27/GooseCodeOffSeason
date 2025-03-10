@@ -26,8 +26,8 @@ import pedroPathing.constants.LConstants;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "ChamberPush", group = "Auton")
-public class ChamberPush extends OpMode {
+@Autonomous(name = "ChamberSlide", group = "Auton")
+public class ChamberSlide extends OpMode {
 
     public MotorMech2 slides;
 
@@ -40,7 +40,7 @@ public class ChamberPush extends OpMode {
 
     /** This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method. */
-    private int pathState, cycle_counter;
+    private int pathState, cycle_counter, push_counter;
 
     /* Create and Define Poses + Paths
      * Poses are built with three constructors: x, y, and heading (in Radians).
@@ -54,14 +54,14 @@ public class ChamberPush extends OpMode {
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(9, 70, Math.toRadians(180));
     private final Pose scorePrePose = new Pose(38,72, Math.toRadians(180));
-    private final Pose pushSplineControl1 = new Pose(20, 35);
-    private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(180));
-    private final Pose returnFirst = new Pose(50,35);
+    private final Pose pushSplineControl1 = new Pose(20, 35, Math.toRadians(180));
+    private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(0));
+    private final Pose returnFirst = new Pose(56,35);
     private final Pose strafeFirst = new Pose(56, 25);
-    private final Pose pushFirst = new Pose(25, 25);
+    private final Pose pushFirst = new Pose(46, 25);
     private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
-    private final Pose pushSecond =  new Pose(25, 15);
+    private final Pose pushSecond =  new Pose(43, 15);
     private final Pose returnThird = new Pose(56, 15);
     private final Pose strafeThird = new Pose(57, 9);
     private final Pose pushThird =  new Pose(20, 9);
@@ -78,7 +78,7 @@ public class ChamberPush extends OpMode {
 
     /* These are our Paths and PathChains that we will define in buildPaths() */
     private Path scorePreload;
-    private PathChain pushSpline, pushBlocks, grabSpline, scoreFirst, grabSecond, scoreSecond, grabThird, scoreThird, grabFourth, scoreFourth, parkGood;
+    private PathChain pushSpline, pushBlock1, pushBlock2, pushBlock3, grabSpline, scoreFirst, grabSecond, scoreSecond, grabThird, scoreThird, grabFourth, scoreFourth, parkGood;
     public void buildPaths() {
         scorePreload = new Path(new BezierLine(new Point(startPose), new Point(scorePrePose)));
         scorePreload.setConstantHeadingInterpolation(Math.toRadians(180));
@@ -87,7 +87,7 @@ public class ChamberPush extends OpMode {
                 .addPath(new BezierCurve(new Point(scorePrePose), new Point(pushSplineControl1), new Point(pushSplineEnd)))
                 .setConstantHeadingInterpolation(scorePrePose.getHeading())
                 .build();
-        pushBlocks  = follower.pathBuilder()
+        pushBlock1  = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(pushSplineEnd), new Point(returnFirst)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setPathEndTimeoutConstraint(20)
@@ -96,6 +96,8 @@ public class ChamberPush extends OpMode {
                 .setPathEndTimeoutConstraint(20)
                 .setPathEndTValueConstraint(0.95)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        pushBlock2 = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(strafeFirst), new Point(pushFirst)))
                 .setPathEndTimeoutConstraint(20)
                 .setPathEndTValueConstraint(0.95)
@@ -108,6 +110,8 @@ public class ChamberPush extends OpMode {
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndTValueConstraint(0.95)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        pushBlock3 = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(strafeSecond), new Point(pushSecond)))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndTValueConstraint(0.95)
@@ -120,12 +124,12 @@ public class ChamberPush extends OpMode {
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndTValueConstraint(0.95)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+        grabSpline = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(strafeThird), new Point(pushThird)))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndTValueConstraint(0.95)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .build();
-        grabSpline = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(pushThird), new Point(grabSplineControl), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
@@ -175,6 +179,7 @@ public class ChamberPush extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                //prepares to score
                 right_swing.setPosition(0.52);
                 left_swing.setPosition(0.52);
                 if (pathTimer.getElapsedTimeSeconds() > 0.25) {
@@ -186,6 +191,7 @@ public class ChamberPush extends OpMode {
                 }
                 break;
             case 1:
+                //scores preloaded specimen
                 if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.5){
                     right_swing.setPosition(0.70);
                     left_swing.setPosition(0.70);
@@ -209,18 +215,45 @@ public class ChamberPush extends OpMode {
                 }
                 break;
             case 3:
+                if(slides.getCurrentRightPosition() > 650) {
+                    slides.move(0, false);
+                }
                 if(!follower.isBusy()){
-                    follower.followPath(pushBlocks, false);
-                    setPathState(4);
+                    if(push_counter == 1){
+                        follower.followPath(pushBlock1, false);
+                        setPathState(4);
+                    }
+                    else if(push_counter == 2){
+                        if(pathTimer.getElapsedTimeSeconds() > 2){
+                            follower.followPath(pushBlock2, false);
+                            setPathState(4);
+                        }
+                    }
+                    else if(push_counter == 3){
+                        follower.followPath(pushBlock3, false);
+                        setPathState(5);
+                    }
                 }
                 break;
             case 4:
                 if(!follower.isBusy()){
-                    follower.followPath(grabSpline, true);
-                    setPathState(5);
+                    pinch_floor.setPosition(1);
+
+                    if(pathTimer.getElapsedTimeSeconds() > 2){
+                        slides.move(700, false);
+                        pinch_floor.setPosition(0.4);
+                        push_counter++;
+                        setPathState(3);
+                    }
                 }
                 break;
             case 5:
+                if(!follower.isBusy()){
+                    follower.followPath(grabSpline, true);
+                    setPathState(6);
+                }
+                break;
+            case 6:
                 //grabs specimen off the wall
                 if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5){
                     pinch_chamber.setPosition(0.95);
@@ -233,31 +266,31 @@ public class ChamberPush extends OpMode {
                     if (pathTimer.getElapsedTimeSeconds() > 2.6) {
                         rotate_chamber.setPosition(0.8);
                         cycle_counter++;
-                        setPathState(6);
+                        setPathState(7);
                     }
                 }
                 break;
-            case 6:
+            case 7:
                 //moves to chamber to score
-                    if(cycle_counter == 1){
-                        follower.followPath(scoreFirst, true);
-                        telemetry.update();
-                        setPathState(7);
-                    }
-                    else if(cycle_counter == 2){
-                        follower.followPath(scoreSecond, true);
-                        setPathState(7);
-                    }
-                    else if(cycle_counter == 3){
-                        follower.followPath(scoreThird, true);
-                        setPathState(7);
-                    }
-                    else if(cycle_counter == 4){
-                        follower.followPath(scoreFourth, true);
-                        setPathState(7);
-                    }
+                if(cycle_counter == 1){
+                    follower.followPath(scoreFirst, true);
+                    telemetry.update();
+                    setPathState(8);
+                }
+                else if(cycle_counter == 2){
+                    follower.followPath(scoreSecond, true);
+                    setPathState(8);
+                }
+                else if(cycle_counter == 3){
+                    follower.followPath(scoreThird, true);
+                    setPathState(8);
+                }
+                else if(cycle_counter == 4){
+                    follower.followPath(scoreFourth, true);
+                    setPathState(8);
+                }
                 break;
-            case 7: //Scores specimen
+            case 8: //Scores specimen
                 if(!follower.isBusy()){
                     right_swing.setPosition(0.65);
                     left_swing.setPosition(0.65);
@@ -270,29 +303,29 @@ public class ChamberPush extends OpMode {
                     }
                     if (pathTimer.getElapsedTimeSeconds() > 3) {
                         rotate_chamber.setPosition(0);
-                        setPathState(8);
+                        setPathState(9);
                     }
                 }
                 break;
-            case 8:
-                    if(cycle_counter == 1){
-                        follower.followPath(grabSecond, true);
-                        setPathState(5);
-                    }
-                    else if(cycle_counter == 2){
-                        follower.followPath(grabThird, true);
-                        setPathState(5);
-                    }
-                    else if(cycle_counter == 3){
-                        follower.followPath(grabFourth, true);
-                        setPathState(5);
-                    }
-                    else if(cycle_counter == 4){
-                        follower.followPath(parkGood, true);
-                        setPathState(9);
-                    }
-                break;
             case 9:
+                if(cycle_counter == 1){
+                    follower.followPath(grabSecond, true);
+                    setPathState(6);
+                }
+                else if(cycle_counter == 2){
+                    follower.followPath(grabThird, true);
+                    setPathState(6);
+                }
+                else if(cycle_counter == 3){
+                    follower.followPath(grabFourth, true);
+                    setPathState(6);
+                }
+                else if(cycle_counter == 4){
+                    follower.followPath(parkGood, true);
+                    setPathState(10);
+                }
+                break;
+            case 10:
                 if(!follower.isBusy()){
                     if(pathTimer.getElapsedTimeSeconds() > 2){
                         slides.setPower(0);
@@ -317,7 +350,7 @@ public class ChamberPush extends OpMode {
         autonomousPathUpdate();
         telemetry.addData("Path State", pathState);
         telemetry.addData("Position", follower.getPose().toString());
-        telemetry.addData("cycle_counter", cycle_counter);
+        telemetry.addData("push_counter", cycle_counter);
         telemetry.update();
     }
 
@@ -334,6 +367,7 @@ public class ChamberPush extends OpMode {
         buildPaths();
 
         cycle_counter = 0;
+        push_counter = 1;
 
         slides = new MotorMech2(hardwareMap, cranePower, false);
 
@@ -348,10 +382,11 @@ public class ChamberPush extends OpMode {
         pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
 
         rotate_floor.setPosition(0.5);
-        flip_floor.setPosition(0.5);
+        flip_floor.setPosition(0.1);
         rotate_chamber.setPosition(0);
         right_swing.setPosition(0.15);
         left_swing.setPosition(0.15);
+        pinch_floor.setPosition(0.4);
     }
 
     /** This method is called continuously after Init while waiting for "play". **/

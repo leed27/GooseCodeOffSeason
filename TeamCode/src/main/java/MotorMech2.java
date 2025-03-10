@@ -19,10 +19,13 @@ public class MotorMech2 {
         right_horizontal = hardwareMap.get(DcMotorEx.class, "right_horizontal");
         right_horizontal.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        right_horizontal.setDirection(DcMotorEx.Direction.REVERSE);
-        left_horizontal.setDirection(DcMotorEx.Direction.FORWARD);
-        resetEncoders();
+        right_horizontal.setDirection(DcMotorEx.Direction.FORWARD);
+        left_horizontal.setDirection(DcMotorEx.Direction.REVERSE);
 
+        right_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        resetEncoders();
 
         targetPosition = 0;
 

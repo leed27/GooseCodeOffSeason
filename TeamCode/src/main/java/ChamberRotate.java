@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
-@Disabled
 @Autonomous(name = "ChamberRotate", group = "Pedro")
 public class ChamberRotate extends OpMode {
 
@@ -190,32 +189,36 @@ public class ChamberRotate extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                rotate_floor.setPosition(0.5);
-                flip_floor.setPosition(0.5);
-                rotate_chamber.setPosition(0.8);
-                pinch_chamber.setPosition(0.95);
                 right_swing.setPosition(0.52);
                 left_swing.setPosition(0.52);
-                follower.followPath(scorePreload, true);
+                if (pathTimer.getElapsedTimeSeconds() > 0.25) {
+                    rotate_chamber.setPosition(0.8);
+                }
+                if(pathTimer.getElapsedTimeSeconds() > 1) {
+                    follower.followPath(scorePreload, true);
+                    setPathState(1);
+                }
                 setPathState(1);
                 break;
             case 1:
                 if(!follower.isBusy()) {
                     //score preloaded speciman
-                    right_swing.setPosition(0.70);
-                    left_swing.setPosition(0.70);
+                    if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.5){
+                        right_swing.setPosition(0.70);
+                        left_swing.setPosition(0.70);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 0.1) {
-                        pinch_chamber.setPosition(0.5);
+                        if (pathTimer.getElapsedTimeSeconds() > 2 && right_swing.getPosition() == 0.7) {
+                            pinch_chamber.setPosition(0.5);
 
-                        right_swing.setPosition(0.07);
-                        left_swing.setPosition(0.07);
+                            right_swing.setPosition(0.07);
+                            left_swing.setPosition(0.07);
+                        }
+                        if (pathTimer.getElapsedTimeSeconds() > 2) {
+                            rotate_chamber.setPosition(0);
+                            follower.followPath(moveFirstBlock, true);
+                            setPathState(2);
+                        }
                     }
-                    if (pathTimer.getElapsedTimeSeconds() > 0.2) {
-                        rotate_chamber.setPosition(0);
-                    }
-                    follower.followPath(moveFirstBlock, true);
-                    setPathState(2);
                 }
                 break;
             case 2:
