@@ -59,7 +59,7 @@ public class ChamberRotate extends OpMode {
 
     /** Pose for maneuvering around the submersible */
     private final Pose maneuverPose = new Pose(58, 36.5, Math.toRadians(0));
-    /** Maneuver Control Pose for our robot, this is used to manipulate the bezier curve that we will create for the maneuver.
+    /** Maneuver Control Pose for our tests.robot, this is used to manipulate the bezier curve that we will create for the maneuver.
      * The Robot will not go to this pose, it is used a control point for our bezier curve. */
     private final Pose maneuverControlPose = new Pose(13, 25, Math.toRadians(0));
 
@@ -335,7 +335,7 @@ public class ChamberRotate extends OpMode {
                 }
                 break;
             case 16:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                /* This case checks the tests.robot's position and will wait until the tests.robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
                     if (pathTimer.getElapsedTimeSeconds() > 4) {
@@ -363,7 +363,7 @@ public class ChamberRotate extends OpMode {
     @Override
     public void loop() {
 
-        // These loop the movements of the robot
+        // These loop the movements of the tests.robot
         follower.update();
         autonomousPathUpdate();
 

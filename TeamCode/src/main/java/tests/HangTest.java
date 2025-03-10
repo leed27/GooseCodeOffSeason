@@ -1,3 +1,4 @@
+package tests;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -82,8 +83,8 @@ public class HangTest extends LinearOpMode {
         right_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        right_hang.setDirection(DcMotorEx.Direction.FORWARD);
-        left_hang.setDirection(DcMotorEx.Direction.REVERSE);
+        right_hang.setDirection(DcMotorEx.Direction.REVERSE);
+        left_hang.setDirection(DcMotorEx.Direction.FORWARD);
 
         right_hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -117,23 +118,24 @@ public class HangTest extends LinearOpMode {
                 if (gamepad2.triangle) {
 //                    movevertically(right_hang, 1670, 1);
 //                    movevertically(left_hang, 1670, 1);
-                    moveHang(1670, false);
+                    moveHang(2700, false);
                 } else if (gamepad2.circle) {
 //                    movevertically(right_hang, 0, 1);
 //                    movevertically(left_hang, 0, 1);
-                    moveHang(0, false);
+                    moveHang(70, false);
                 } else if (gamepad2.cross) {
 //                    movevertically(right_hang, 2570, 1);
 //                    movevertically(left_hang, 2570, 1);
-                    moveHang(2570, false);
-                } else if (gamepad2.square) {
-//                    movevertically(right_hang, 1900, 1);
-//                    movevertically(left_hang, 1900, 1);
-                    moveHang(1900, false);
+                    moveHang(3580, false);
                 }
+//                else if (gamepad2.square) {
+////                    movevertically(right_hang, 1900, 1);
+////                    movevertically(left_hang, 1900, 1);
+//                    moveHang(1900, false);
+//                }
                 else if (gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
                    moveHang(gamepad2.left_trigger - gamepad2.right_trigger, true);
-               }
+                }
 
 //                if(gamepad2.right_trigger > 0){
 //                    right_hang.setPower(1);

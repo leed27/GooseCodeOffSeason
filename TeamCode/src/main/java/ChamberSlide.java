@@ -48,20 +48,20 @@ public class ChamberSlide extends OpMode {
      * (For Into the Deep, this would be Blue Observation Zone (0,0) to Red Observation Zone (144,144).)
      * Even though Pedro uses a different coordinate system than RR, you can convert any roadrunner pose by adding +72 both the x and y.
      * This visualizer is very easy to use to find and create paths/pathchains/poses: <https://pedro-path-generator.vercel.app/>
-     * Lets assume our robot is 18 by 18 inches
+     * Lets assume our tests.robot is 18 by 18 inches
      * Lets assume the Robot is facing the human player and we want to score in the bucket */
 
-    /** Start Pose of our robot */
+    /** Start Pose of our tests.robot */
     private final Pose startPose = new Pose(9, 70, Math.toRadians(180));
     private final Pose scorePrePose = new Pose(38,72, Math.toRadians(180));
     private final Pose pushSplineControl1 = new Pose(20, 35, Math.toRadians(180));
     private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(0));
-    private final Pose returnFirst = new Pose(56,35);
-    private final Pose strafeFirst = new Pose(56, 25);
-    private final Pose pushFirst = new Pose(46, 25);
-    private final Pose returnSecond = new Pose(56, 25);
-    private final Pose strafeSecond = new Pose(56, 15);
-    private final Pose pushSecond =  new Pose(43, 15);
+    private final Pose returnFirst = new Pose(57.5,35);
+    private final Pose strafeFirst = new Pose(57.5, 26.5);
+    private final Pose pushFirst = new Pose(44, 26.5);
+    private final Pose returnSecond = new Pose(57.5, 26.5);
+    private final Pose strafeSecond = new Pose(57.5, 15);
+    private final Pose pushSecond =  new Pose(45, 15);
     private final Pose returnThird = new Pose(56, 15);
     private final Pose strafeThird = new Pose(57, 9);
     private final Pose pushThird =  new Pose(20, 9);
@@ -136,18 +136,22 @@ public class ChamberSlide extends OpMode {
         scoreFirst = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreFirstPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setPathEndTimeoutConstraint(200)
                 .build();
         scoreSecond = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreSecondPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setPathEndTimeoutConstraint(200)
                 .build();
         scoreThird = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreThirdPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setPathEndTimeoutConstraint(200)
                 .build();
         scoreFourth = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreFourthPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setPathEndTimeoutConstraint(200)
                 .build();
         grabSecond = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreFirstPose), new Point(grabPose)))
@@ -215,125 +219,138 @@ public class ChamberSlide extends OpMode {
                 }
                 break;
             case 3:
-                if(slides.getCurrentRightPosition() > 650) {
-                    slides.move(0, false);
-                }
                 if(!follower.isBusy()){
-                    if(push_counter == 1){
-                        follower.followPath(pushBlock1, false);
-                        setPathState(4);
-                    }
-                    else if(push_counter == 2){
-                        if(pathTimer.getElapsedTimeSeconds() > 2){
-                            follower.followPath(pushBlock2, false);
-                            setPathState(4);
-                        }
-                    }
-                    else if(push_counter == 3){
-                        follower.followPath(pushBlock3, false);
-                        setPathState(5);
-                    }
+                    follower.followPath(pushBlock1, false);
+                    setPathState(4);
                 }
                 break;
             case 4:
                 if(!follower.isBusy()){
                     pinch_floor.setPosition(1);
-
-                    if(pathTimer.getElapsedTimeSeconds() > 2){
+                    if(pathTimer.getElapsedTimeSeconds() > 1.8){
                         slides.move(700, false);
-                        pinch_floor.setPosition(0.4);
-                        push_counter++;
-                        setPathState(3);
+                        setPathState(5);
                     }
                 }
                 break;
             case 5:
                 if(!follower.isBusy()){
-                    follower.followPath(grabSpline, true);
+                    follower.followPath(pushBlock2, false);
+                }
+                if(pathTimer.getElapsedTimeSeconds() > 0.5) {
+                    pinch_floor.setPosition(0.4);
+                    slides.move(0, false);
                     setPathState(6);
                 }
                 break;
             case 6:
-                //grabs specimen off the wall
-                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5){
-                    pinch_chamber.setPosition(0.95);
+                if(!follower.isBusy()){
+                    pinch_floor.setPosition(1);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.5) {
-                        right_swing.setPosition(0.52);
-                        left_swing.setPosition(0.52); //prep score
-                    }
-
-                    if (pathTimer.getElapsedTimeSeconds() > 2.6) {
-                        rotate_chamber.setPosition(0.8);
-                        cycle_counter++;
+                    if(pathTimer.getElapsedTimeSeconds() > 1.9){
+                        slides.move(700, false);
                         setPathState(7);
                     }
                 }
                 break;
             case 7:
-                //moves to chamber to score
-                if(cycle_counter == 1){
-                    follower.followPath(scoreFirst, true);
-                    telemetry.update();
-                    setPathState(8);
+                if(!follower.isBusy()) {
+                    follower.followPath(pushBlock3, false);
                 }
-                else if(cycle_counter == 2){
-                    follower.followPath(scoreSecond, true);
-                    setPathState(8);
-                }
-                else if(cycle_counter == 3){
-                    follower.followPath(scoreThird, true);
-                    setPathState(8);
-                }
-                else if(cycle_counter == 4){
-                    follower.followPath(scoreFourth, true);
+                if(pathTimer.getElapsedTimeSeconds() > 1) {
+                    pinch_floor.setPosition(0.4);
+                    slides.move(0, false);
                     setPathState(8);
                 }
                 break;
-            case 8: //Scores specimen
+            case 8:
                 if(!follower.isBusy()){
-                    right_swing.setPosition(0.65);
-                    left_swing.setPosition(0.65);
+                    follower.followPath(grabSpline, true);
+                    setPathState(9);
+                }
+                break;
+    case 9:
+        //grabs specimen off the wall
+        if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5){
+        pinch_chamber.setPosition(0.95);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.5 && right_swing.getPosition() == 0.65) {
-                        pinch_chamber.setPosition(0.5);
-
-                        right_swing.setPosition(0.07);
-                        left_swing.setPosition(0.07);
-                    }
-                    if (pathTimer.getElapsedTimeSeconds() > 3) {
-                        rotate_chamber.setPosition(0);
-                        setPathState(9);
-                    }
-                }
-                break;
-            case 9:
-                if(cycle_counter == 1){
-                    follower.followPath(grabSecond, true);
-                    setPathState(6);
-                }
-                else if(cycle_counter == 2){
-                    follower.followPath(grabThird, true);
-                    setPathState(6);
-                }
-                else if(cycle_counter == 3){
-                    follower.followPath(grabFourth, true);
-                    setPathState(6);
-                }
-                else if(cycle_counter == 4){
-                    follower.followPath(parkGood, true);
-                    setPathState(10);
-                }
-                break;
-            case 10:
-                if(!follower.isBusy()){
-                    if(pathTimer.getElapsedTimeSeconds() > 2){
-                        slides.setPower(0);
-                    }
-                    setPathState(-1);
-                }
-                break;
+        if (pathTimer.getElapsedTimeSeconds() > 2.5) {
+            right_swing.setPosition(0.52);
+            left_swing.setPosition(0.52); //prep score
         }
+
+        if (pathTimer.getElapsedTimeSeconds() > 2.6) {
+            rotate_chamber.setPosition(0.8);
+            cycle_counter++;
+            setPathState(10);
+        }
+    }
+    break;
+case 10:
+        //moves to chamber to score
+        if(cycle_counter == 1){
+        follower.followPath(scoreFirst, true);
+        telemetry.update();
+        setPathState(11);
+    }
+    else if(cycle_counter == 2){
+        follower.followPath(scoreSecond, true);
+        setPathState(11);
+    }
+    else if(cycle_counter == 3){
+        follower.followPath(scoreThird, true);
+        setPathState(11);
+    }
+    else if(cycle_counter == 4){
+        follower.followPath(scoreFourth, true);
+        setPathState(11);
+    }
+    break;
+case 11: //Scores specimen
+        if(!follower.isBusy()){
+        right_swing.setPosition(0.65);
+        left_swing.setPosition(0.65);
+
+        if (pathTimer.getElapsedTimeSeconds() > 2.5 && right_swing.getPosition() == 0.65) {
+            pinch_chamber.setPosition(0.5);
+
+            right_swing.setPosition(0.07);
+            left_swing.setPosition(0.07);
+        }
+        if (pathTimer.getElapsedTimeSeconds() > 3) {
+            rotate_chamber.setPosition(0);
+            setPathState(12);
+        }
+    }
+    break;
+case 12:
+        if(cycle_counter == 1){
+        follower.followPath(grabSecond, true);
+        setPathState(9);
+    }
+    else if(cycle_counter == 2){
+        follower.followPath(grabThird, true);
+        setPathState(9);
+    }
+    else if(cycle_counter == 3){
+        follower.followPath(grabFourth, true);
+        setPathState(9);
+    }
+    else if(cycle_counter == 4){
+        follower.followPath(parkGood, true);
+        setPathState(13);
+    }
+    break;
+case 13:
+        if(!follower.isBusy()){
+        if(pathTimer.getElapsedTimeSeconds() > 2){
+            slides.setPower(0);
+        }
+        setPathState(-1);
+    }
+    break;
+
+}
     }
 
     /** These change the states of the paths and actions

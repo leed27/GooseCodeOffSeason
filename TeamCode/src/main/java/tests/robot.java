@@ -1,8 +1,6 @@
-import com.pedropathing.follower.FollowerConstants;
-import com.qualcomm.robotcore.hardware.DcMotor;
+package tests;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 public class robot {
