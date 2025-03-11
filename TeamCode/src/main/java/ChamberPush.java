@@ -52,28 +52,28 @@ public class ChamberPush extends OpMode {
      * Lets assume the Robot is facing the human player and we want to score in the bucket */
 
     /** Start Pose of our tests.robot */
-    private final Pose startPose = new Pose(9, 70, Math.toRadians(180));
+    private final Pose startPose = new Pose(9, 72, Math.toRadians(180));
     private final Pose scorePrePose = new Pose(38,72, Math.toRadians(180));
     private final Pose pushSplineControl1 = new Pose(20, 35);
     private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(180));
-    private final Pose returnFirst = new Pose(50,35);
+    private final Pose returnFirst = new Pose(56,35);
     private final Pose strafeFirst = new Pose(56, 25);
-    private final Pose pushFirst = new Pose(25, 25);
+    private final Pose pushFirst = new Pose(25, 26);
     private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
-    private final Pose pushSecond =  new Pose(25, 15);
-    private final Pose returnThird = new Pose(56, 15);
-    private final Pose strafeThird = new Pose(57, 9);
-    private final Pose pushThird =  new Pose(20, 9);
+    private final Pose pushSecond =  new Pose(20, 15); //25,15
+    private final Pose returnThird = new Pose(55, 15);
+    private final Pose strafeThird = new Pose(55, 9);
+    private final Pose pushThird =  new Pose(19, 9);
     private final Pose grabSplineControl = new Pose(35, 28);
-    private final Pose grabForwardPose = new Pose(10.5, 35, Math.toRadians(180));
-    private final Pose grabPose = new Pose(18, 35, Math.toRadians(180));
-    private final Pose scoreFirstPose = new Pose(38, 72, Math.toRadians(180));
+    private final Pose grabForwardPose = new Pose(9.5, 35, Math.toRadians(180));
+    private final Pose grabPose = new Pose(30, 35);
+    private final Pose scoreFirstPose = new Pose(38, 71, Math.toRadians(180));
     private final Pose scoreSecondPose = new Pose(38, 69, Math.toRadians(180));
     private final Pose safetyScore = new Pose(38, 69, Math.toRadians(180));
     private final Pose scoreThirdPose = new Pose(38, 67, Math.toRadians(180));
     private final Pose scoreFourthPose = new Pose(40, 67, Math.toRadians(180));
-    private final Pose parkPose = new Pose(9, 5);
+    private final Pose parkPose = new Pose(12, 10);
 
 
     /* These are our Paths and PathChains that we will define in buildPaths() */
@@ -112,21 +112,21 @@ public class ChamberPush extends OpMode {
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndTValueConstraint(0.95)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(pushSecond), new Point(returnThird)))
-                .setPathEndTimeoutConstraint(100)
-                .setPathEndTValueConstraint(0.95)
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(returnThird), new Point(strafeThird)))
-                .setPathEndTimeoutConstraint(100)
-                .setPathEndTValueConstraint(0.95)
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(strafeThird), new Point(pushThird)))
-                .setPathEndTimeoutConstraint(100)
-                .setPathEndTValueConstraint(0.95)
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+//                .addPath(new BezierLine(new Point(pushSecond), new Point(returnThird)))
+//                .setPathEndTimeoutConstraint(100)
+//                .setPathEndTValueConstraint(0.95)
+//                .setConstantHeadingInterpolation(Math.toRadians(180))
+//                .addPath(new BezierLine(new Point(returnThird), new Point(strafeThird)))
+//                .setPathEndTimeoutConstraint(100)
+//                .setPathEndTValueConstraint(0.95)
+//                .setConstantHeadingInterpolation(Math.toRadians(180))
+//                .addPath(new BezierLine(new Point(strafeThird), new Point(pushThird)))
+//                .setPathEndTimeoutConstraint(100)
+//                .setPathEndTValueConstraint(0.95)
+//                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         grabSpline = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(pushThird), new Point(grabSplineControl), new Point(grabForwardPose)))
+                .addPath(new BezierCurve(new Point(pushSecond), new Point(grabSplineControl), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         scoreFirst = follower.pathBuilder()
@@ -148,23 +148,26 @@ public class ChamberPush extends OpMode {
         grabSecond = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreFirstPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndTimeoutConstraint(500)
+                .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
         grabThird = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreSecondPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndTimeoutConstraint(500)
+                .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
         grabFourth = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreThirdPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndTimeoutConstraint(500)
+                .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
         parkGood = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(parkPose)))
@@ -225,12 +228,12 @@ public class ChamberPush extends OpMode {
                 if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5){
                     pinch_chamber.setPosition(0.95);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.5) {
+                    if (pathTimer.getElapsedTimeSeconds() > 3) {
                         right_swing.setPosition(0.52);
                         left_swing.setPosition(0.52); //prep score
                     }
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.6) {
+                    if (pathTimer.getElapsedTimeSeconds() > 3.1) {
                         rotate_chamber.setPosition(0.8);
                         cycle_counter++;
                         setPathState(6);
@@ -262,7 +265,8 @@ public class ChamberPush extends OpMode {
                     right_swing.setPosition(0.65);
                     left_swing.setPosition(0.65);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.5 && right_swing.getPosition() == 0.65) {
+                    if (pathTimer.getElapsedTimeSeconds() > 2.35 && right_swing.getPosition() == 0.65) {
+                        //2.5 sec
                         pinch_chamber.setPosition(0.5);
 
                         right_swing.setPosition(0.07);
@@ -288,7 +292,7 @@ public class ChamberPush extends OpMode {
                         setPathState(5);
                     }
                     else if(cycle_counter == 4){
-                        follower.followPath(parkGood, true);
+                        //follower.followPath(parkGood, true);
                         setPathState(9);
                     }
                 break;
@@ -350,8 +354,8 @@ public class ChamberPush extends OpMode {
         rotate_floor.setPosition(0.5);
         flip_floor.setPosition(0.5);
         rotate_chamber.setPosition(0);
-        right_swing.setPosition(0.15);
-        left_swing.setPosition(0.15);
+        right_swing.setPosition(0.18);
+        left_swing.setPosition(0.18);
     }
 
     /** This method is called continuously after Init while waiting for "play". **/

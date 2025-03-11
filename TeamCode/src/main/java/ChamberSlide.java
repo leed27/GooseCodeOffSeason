@@ -52,15 +52,15 @@ public class ChamberSlide extends OpMode {
      * Lets assume the Robot is facing the human player and we want to score in the bucket */
 
     /** Start Pose of our tests.robot */
-    private final Pose startPose = new Pose(9, 70, Math.toRadians(180));
+    private final Pose startPose = new Pose(9, 72, Math.toRadians(180));
     private final Pose scorePrePose = new Pose(38,72, Math.toRadians(180));
     private final Pose pushSplineControl1 = new Pose(20, 35, Math.toRadians(180));
     private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(0));
-    private final Pose returnFirst = new Pose(57.5,35);
-    private final Pose strafeFirst = new Pose(57.5, 26.5);
-    private final Pose pushFirst = new Pose(44, 26.5);
-    private final Pose returnSecond = new Pose(57.5, 26.5);
-    private final Pose strafeSecond = new Pose(57.5, 15);
+    private final Pose returnFirst = new Pose(55,35);
+    private final Pose strafeFirst = new Pose(55, 25.5);
+    private final Pose pushFirst = new Pose(44, 26);
+    private final Pose returnSecond = new Pose(56, 26);
+    private final Pose strafeSecond = new Pose(56, 15);
     private final Pose pushSecond =  new Pose(45, 15);
     private final Pose returnThird = new Pose(56, 15);
     private final Pose strafeThird = new Pose(57, 9);
@@ -227,6 +227,7 @@ public class ChamberSlide extends OpMode {
             case 4:
                 if(!follower.isBusy()){
                     pinch_floor.setPosition(1);
+                    flip_floor.setPosition(0.2);
                     if(pathTimer.getElapsedTimeSeconds() > 1.8){
                         slides.move(700, false);
                         setPathState(5);
@@ -239,6 +240,7 @@ public class ChamberSlide extends OpMode {
                 }
                 if(pathTimer.getElapsedTimeSeconds() > 0.5) {
                     pinch_floor.setPosition(0.4);
+                    flip_floor.setPosition(0.1);
                     slides.move(0, false);
                     setPathState(6);
                 }
@@ -246,7 +248,7 @@ public class ChamberSlide extends OpMode {
             case 6:
                 if(!follower.isBusy()){
                     pinch_floor.setPosition(1);
-
+                    flip_floor.setPosition(0.2);
                     if(pathTimer.getElapsedTimeSeconds() > 1.9){
                         slides.move(700, false);
                         setPathState(7);
@@ -259,6 +261,7 @@ public class ChamberSlide extends OpMode {
                 }
                 if(pathTimer.getElapsedTimeSeconds() > 1) {
                     pinch_floor.setPosition(0.4);
+                    flip_floor.setPosition(0.1);
                     slides.move(0, false);
                     setPathState(8);
                 }

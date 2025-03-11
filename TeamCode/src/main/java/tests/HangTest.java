@@ -109,6 +109,7 @@ public class HangTest extends LinearOpMode {
                 telemetry.addData("Status", "Running");
                 telemetry.addData("right_hang: ", right_hang.getCurrentPosition());
                 telemetry.addData("left_hang: ", left_hang.getCurrentPosition());
+                telemetry.addData("built", "yay");
                 //telemetry.addData("mode: ", right_horizontal.getMode());
                 //telemetry.addData("motor state: ", motorState);
 
@@ -116,25 +117,25 @@ public class HangTest extends LinearOpMode {
                 telemetry.update();
 
                 if (gamepad2.triangle) {
-//                    movevertically(right_hang, 1670, 1);
-//                    movevertically(left_hang, 1670, 1);
-                    moveHang(2700, false);
+                   movevertically(right_hang, 4200, 1);
+                   movevertically(left_hang, 4200, 1);
+                    //moveHang(4250, false);
                 } else if (gamepad2.circle) {
-//                    movevertically(right_hang, 0, 1);
-//                    movevertically(left_hang, 0, 1);
-                    moveHang(70, false);
+                    movevertically(right_hang, 400, 1);
+                    movevertically(left_hang, 400, 1);
+                    //moveHang(400, false);
                 } else if (gamepad2.cross) {
-//                    movevertically(right_hang, 2570, 1);
-//                    movevertically(left_hang, 2570, 1);
-                    moveHang(3580, false);
+                    movevertically(right_hang, 6300, 1);
+                   movevertically(left_hang, 6300, 1);
+                    //moveHang(6300, false); //6300
                 }
 //                else if (gamepad2.square) {
-////                    movevertically(right_hang, 1900, 1);
-////                    movevertically(left_hang, 1900, 1);
+   //             movevertically(right_hang, 1900, 1);
+   //                 movevertically(left_hang, 1900, 1);
 //                    moveHang(1900, false);
 //                }
                 else if (gamepad2.left_trigger > 0 || gamepad2.right_trigger > 0) {
-                   moveHang(gamepad2.left_trigger - gamepad2.right_trigger, true);
+                   //moveHang(gamepad2.left_trigger - gamepad2.right_trigger, true);
                 }
 
 //                if(gamepad2.right_trigger > 0){
@@ -249,8 +250,8 @@ public class HangTest extends LinearOpMode {
         if(movement > 0 && byPower){
             left_hang.setPower(movement);
             right_hang.setPower(movement);
-            left_hang.setTargetPosition(4000);
-            right_hang.setTargetPosition(4000);
+            left_hang.setTargetPosition(6500);
+            right_hang.setTargetPosition(6500);
         }else if(movement < 0 && byPower){
             left_hang.setPower(-movement);
             right_hang.setPower(-movement);
@@ -265,8 +266,8 @@ public class HangTest extends LinearOpMode {
         }else if(movement > 4000){
             left_hang.setPower(1);
             right_hang.setPower(1);
-            left_hang.setTargetPosition(4000);
-            right_hang.setTargetPosition(4000);
+            left_hang.setTargetPosition(6500);
+            right_hang.setTargetPosition(6500);
         }else if(movement < 0){
             left_hang.setPower(1);
             right_hang.setPower(1);
