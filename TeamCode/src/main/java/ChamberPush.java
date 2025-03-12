@@ -53,26 +53,26 @@ public class ChamberPush extends OpMode {
 
     /** Start Pose of our tests.robot */
     private final Pose startPose = new Pose(9, 72, Math.toRadians(180));
-    private final Pose scorePrePose = new Pose(38.5,72, Math.toRadians(180));
+    private final Pose scorePrePose = new Pose(39,72, Math.toRadians(180));
     private final Pose pushSplineControl1 = new Pose(20, 35);
     private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(180));
     private final Pose returnFirst = new Pose(56,35);
     private final Pose strafeFirst = new Pose(56, 25);
-    private final Pose pushFirst = new Pose(25, 26);
+    private final Pose pushFirst = new Pose(26, 26);
     private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
-    private final Pose pushSecond =  new Pose(18, 15); //25,15
+    private final Pose pushSecond =  new Pose(12, 15); //25,15
     private final Pose returnThird = new Pose(55, 15);
     private final Pose strafeThird = new Pose(55, 9);
-    private final Pose pushThird =  new Pose(19, 9);
-    private final Pose grabSplineControl = new Pose(22, 35);
-    private final Pose grabForwardPose = new Pose(9.5, 35, Math.toRadians(180));
-    private final Pose grabPose = new Pose(30, 35);
+    private final Pose pushThird =  new Pose(17, 9);
+    private final Pose grabSplineControl = new Pose(30, 32);
+    private final Pose grabForwardPose = new Pose(9, 32, Math.toRadians(180));
+    private final Pose grabPose = new Pose(30, 32);
     private final Pose scoreFirstPose = new Pose(38, 71, Math.toRadians(180));
     private final Pose scoreSecondPose = new Pose(38, 69, Math.toRadians(180));
     private final Pose safetyScore = new Pose(38, 69, Math.toRadians(180));
     private final Pose scoreThirdPose = new Pose(38, 68, Math.toRadians(180));
-    private final Pose scoreFourthPose = new Pose(38, 67, Math.toRadians(180));
+    private final Pose scoreFourthPose = new Pose(37.5, 67, Math.toRadians(180));
     private final Pose parkPose = new Pose(12, 10);
 
 
@@ -148,26 +148,23 @@ public class ChamberPush extends OpMode {
         grabSecond = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreFirstPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setZeroPowerAccelerationMultiplier(3.2)
+                //.setZeroPowerAccelerationMultiplier(3.2)
                 .build();
         grabThird = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreSecondPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setZeroPowerAccelerationMultiplier(2)
+                //.setZeroPowerAccelerationMultiplier(2)
                 .build();
         grabFourth = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreThirdPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setZeroPowerAccelerationMultiplier(2)
+                //.setZeroPowerAccelerationMultiplier(2)
                 .build();
         parkGood = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(parkPose)))
@@ -183,23 +180,23 @@ public class ChamberPush extends OpMode {
                 if (pathTimer.getElapsedTimeSeconds() > 0.25) {
                     rotate_chamber.setPosition(0.8);
                 }
-                if(pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if(pathTimer.getElapsedTimeSeconds() > 0.4) {
                     follower.followPath(scorePreload, true);
                     setPathState(1);
                 }
                 break;
             case 1:
-                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.5){
+                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.2){
                     right_swing.setPosition(0.70);
                     left_swing.setPosition(0.70);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 1.9 && right_swing.getPosition() == 0.7) {
+                    if (pathTimer.getElapsedTimeSeconds() > 1.7 && right_swing.getPosition() == 0.7) {
                         pinch_chamber.setPosition(0.5);
 
                         right_swing.setPosition(0.07);
                         left_swing.setPosition(0.07);
                     }
-                    if (pathTimer.getElapsedTimeSeconds() > 2) {
+                    if (pathTimer.getElapsedTimeSeconds() > 1.9) {
                         rotate_chamber.setPosition(0);
                         setPathState(2);
                     }
@@ -225,15 +222,15 @@ public class ChamberPush extends OpMode {
                 break;
             case 5:
                 //grabs specimen off the wall
-                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5){
+                if(!follower.isBusy()){
                     pinch_chamber.setPosition(0.95);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 3.7) {
+                    if (pathTimer.getElapsedTimeSeconds() > 3.3) {
                         right_swing.setPosition(0.52);
                         left_swing.setPosition(0.52); //prep score
                     }
 
-                    if (pathTimer.getElapsedTimeSeconds() > 3.8) {
+                    if (pathTimer.getElapsedTimeSeconds() > 3.4) {
                         rotate_chamber.setPosition(0.8);
                         cycle_counter++;
                         setPathState(6);
@@ -262,20 +259,32 @@ public class ChamberPush extends OpMode {
                 break;
             case 7: //Scores specimen
                 if(!follower.isBusy()){
-                    right_swing.setPosition(0.65);
-                    left_swing.setPosition(0.65);
+//                    if(cycle_counter == 4){
+//                        right_swing.setPosition(0.75);
+//                        left_swing.setPosition(0.75);
+//
+//                        if (pathTimer.getElapsedTimeSeconds() > 2.35 && right_swing.getPosition() == 0.7) {
+//                            pinch_chamber.setPosition(0.5);
+//                        }
+//                        if (pathTimer.getElapsedTimeSeconds() > 3) {
+//                            rotate_chamber.setPosition(0);
+//                            setPathState(9);
+//                        }
+//                    }
+                        right_swing.setPosition(0.65);
+                        left_swing.setPosition(0.65);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.35 && right_swing.getPosition() == 0.65) {
-                        //2.5 sec
-                        pinch_chamber.setPosition(0.5);
+                        if (pathTimer.getElapsedTimeSeconds() > 2.35 && right_swing.getPosition() == 0.65) {
+                            //2.5 sec
+                            pinch_chamber.setPosition(0.5);
 
-                        right_swing.setPosition(0.07);
-                        left_swing.setPosition(0.07);
-                    }
-                    if (pathTimer.getElapsedTimeSeconds() > 3) {
-                        rotate_chamber.setPosition(0);
-                        setPathState(8);
-                    }
+                            right_swing.setPosition(0.07);
+                            left_swing.setPosition(0.07);
+                        }
+                        if (pathTimer.getElapsedTimeSeconds() > 3) {
+                            rotate_chamber.setPosition(0);
+                            setPathState(8);
+                        }
                 }
                 break;
             case 8:
@@ -297,10 +306,7 @@ public class ChamberPush extends OpMode {
                     }
                 break;
             case 9:
-                if(!follower.isBusy()){
-                    if(pathTimer.getElapsedTimeSeconds() > 2){
-                        slides.setPower(0);
-                    }
+                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 2){
                     setPathState(-1);
                 }
                 break;

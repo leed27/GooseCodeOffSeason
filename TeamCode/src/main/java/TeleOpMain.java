@@ -173,16 +173,16 @@ public class TeleOpMain extends LinearOpMode {
 //                }
 
                 if(gamepad2.right_trigger > 0){
-                    right_hang.setPower(1);
-                    left_hang.setPower(1);
+                    right_swing.setPwmDisable();
+                    left_swing.setPwmDisable();
+                    pinch_chamber.setPwmDisable();
+                    rotate_chamber.setPwmDisable();
                 }
                 else if(gamepad2.left_trigger > 0){
-                    right_hang.setPower(-1);
-                    left_hang.setPower(-1);
-                }
-                else{
-                    right_hang.setPower(0);
-                    left_hang.setPower(0);
+                    right_swing.setPwmEnable();
+                    left_swing.setPwmEnable();
+                    pinch_chamber.setPwmEnable();
+                    rotate_chamber.setPwmEnable();
                 }
 
                 //OTHER GAMEPAD2 CONTROLS
