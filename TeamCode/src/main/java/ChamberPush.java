@@ -53,7 +53,7 @@ public class ChamberPush extends OpMode {
 
     /** Start Pose of our tests.robot */
     private final Pose startPose = new Pose(9, 72, Math.toRadians(180));
-    private final Pose scorePrePose = new Pose(38,72, Math.toRadians(180));
+    private final Pose scorePrePose = new Pose(38.5,72, Math.toRadians(180));
     private final Pose pushSplineControl1 = new Pose(20, 35);
     private final Pose pushSplineEnd = new Pose(30, 35, Math.toRadians(180));
     private final Pose returnFirst = new Pose(56,35);
@@ -61,18 +61,18 @@ public class ChamberPush extends OpMode {
     private final Pose pushFirst = new Pose(25, 26);
     private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
-    private final Pose pushSecond =  new Pose(20, 15); //25,15
+    private final Pose pushSecond =  new Pose(18, 15); //25,15
     private final Pose returnThird = new Pose(55, 15);
     private final Pose strafeThird = new Pose(55, 9);
     private final Pose pushThird =  new Pose(19, 9);
-    private final Pose grabSplineControl = new Pose(35, 28);
+    private final Pose grabSplineControl = new Pose(22, 35);
     private final Pose grabForwardPose = new Pose(9.5, 35, Math.toRadians(180));
     private final Pose grabPose = new Pose(30, 35);
     private final Pose scoreFirstPose = new Pose(38, 71, Math.toRadians(180));
     private final Pose scoreSecondPose = new Pose(38, 69, Math.toRadians(180));
     private final Pose safetyScore = new Pose(38, 69, Math.toRadians(180));
-    private final Pose scoreThirdPose = new Pose(38, 67, Math.toRadians(180));
-    private final Pose scoreFourthPose = new Pose(40, 67, Math.toRadians(180));
+    private final Pose scoreThirdPose = new Pose(38, 68, Math.toRadians(180));
+    private final Pose scoreFourthPose = new Pose(38, 67, Math.toRadians(180));
     private final Pose parkPose = new Pose(12, 10);
 
 
@@ -151,7 +151,7 @@ public class ChamberPush extends OpMode {
                 .setPathEndTimeoutConstraint(100)
                 .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(3.2)
                 .build();
         grabThird = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreSecondPose), new Point(grabPose)))
@@ -228,12 +228,12 @@ public class ChamberPush extends OpMode {
                 if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5){
                     pinch_chamber.setPosition(0.95);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 3) {
+                    if (pathTimer.getElapsedTimeSeconds() > 3.7) {
                         right_swing.setPosition(0.52);
                         left_swing.setPosition(0.52); //prep score
                     }
 
-                    if (pathTimer.getElapsedTimeSeconds() > 3.1) {
+                    if (pathTimer.getElapsedTimeSeconds() > 3.8) {
                         rotate_chamber.setPosition(0.8);
                         cycle_counter++;
                         setPathState(6);
