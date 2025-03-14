@@ -117,17 +117,26 @@ public class HangTest extends LinearOpMode {
                 telemetry.update();
 
                 if (gamepad2.triangle) {
-                   movevertically(right_hang, 4200, 1);
-                   movevertically(left_hang, 4200, 1);
+                   movevertically(right_hang, 2800, 1);
+                   movevertically(left_hang, 2800, 1);
                     //moveHang(4250, false);
                 } else if (gamepad2.circle) {
-                    movevertically(right_hang, 400, 1);
-                    movevertically(left_hang, 400, 1);
+                    movevertically(right_hang, 380, 1);
+                    movevertically(left_hang, 380, 1);
                     //moveHang(400, false);
                 } else if (gamepad2.cross) {
-                    movevertically(right_hang, 6300, 1);
-                   movevertically(left_hang, 6300, 1);
+                    movevertically(right_hang, 3550, 1);
+                   movevertically(left_hang, 3550, 1);
                     //moveHang(6300, false); //6300
+                }
+
+                if(gamepad2.right_bumper){
+                    movevertically(right_horizontal, 500, 0.2);
+                    movevertically(left_horizontal, 500, 0.2);
+                }
+                else if(gamepad2.left_bumper){
+                    movevertically(right_horizontal, 0, 0.2);
+                    movevertically(left_horizontal, 0, 0.2);
                 }
 //                else if (gamepad2.square) {
    //             movevertically(right_hang, 1900, 1);

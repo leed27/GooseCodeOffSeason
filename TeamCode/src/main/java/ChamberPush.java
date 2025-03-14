@@ -66,12 +66,15 @@ public class ChamberPush extends OpMode {
     private final Pose strafeThird = new Pose(55, 9);
     private final Pose pushThird =  new Pose(17, 9);
     private final Pose grabSplineControl = new Pose(30, 32);
-    private final Pose grabForwardPose = new Pose(9, 32, Math.toRadians(180));
+    private final Pose grabForwardPose = new Pose(8.5, 32, Math.toRadians(180));
+    private final Pose grabForwardPose2 = new Pose(8, 32, Math.toRadians(180));
+    private final Pose grabForwardPose3 = new Pose(7.5, 32, Math.toRadians(180));
+    private final Pose grabForwardPose4 = new Pose(7.5, 32, Math.toRadians(180));
     private final Pose grabPose = new Pose(30, 32);
-    private final Pose scoreFirstPose = new Pose(38, 71, Math.toRadians(180));
-    private final Pose scoreSecondPose = new Pose(38, 69, Math.toRadians(180));
-    private final Pose safetyScore = new Pose(38, 69, Math.toRadians(180));
-    private final Pose scoreThirdPose = new Pose(38, 68, Math.toRadians(180));
+    private final Pose scoreFirstPose = new Pose(37.5, 71, Math.toRadians(180));
+    private final Pose scoreSecondPose = new Pose(37.5, 69, Math.toRadians(180));
+    private final Pose safetyScore = new Pose(37.5, 69, Math.toRadians(180));
+    private final Pose scoreThirdPose = new Pose(37.5, 68, Math.toRadians(180));
     private final Pose scoreFourthPose = new Pose(37.5, 67, Math.toRadians(180));
     private final Pose parkPose = new Pose(12, 10);
 
@@ -134,35 +137,35 @@ public class ChamberPush extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         scoreSecond = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreSecondPose)))
+                .addPath(new BezierLine(new Point(grabForwardPose2), new Point(scoreSecondPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         scoreThird = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreThirdPose)))
+                .addPath(new BezierLine(new Point(grabForwardPose3), new Point(scoreThirdPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         scoreFourth = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(grabForwardPose), new Point(scoreFourthPose)))
+                .addPath(new BezierLine(new Point(grabForwardPose4), new Point(scoreFourthPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         grabSecond = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreFirstPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
+                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose2)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 //.setZeroPowerAccelerationMultiplier(3.2)
                 .build();
         grabThird = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreSecondPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
+                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose3)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 //.setZeroPowerAccelerationMultiplier(2)
                 .build();
         grabFourth = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoreThirdPose), new Point(grabPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose)))
+                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose4)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 //.setZeroPowerAccelerationMultiplier(2)
                 .build();

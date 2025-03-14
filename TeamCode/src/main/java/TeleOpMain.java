@@ -95,19 +95,20 @@ public class TeleOpMain extends LinearOpMode {
         telemetry.update();
 
         driveState = state.DRIVE_FORWARD;
-        
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
 
-        if(opModeInInit()){
+        while(opModeInInit()){
             rotate_floor.setPosition(0.5);
             flip_floor.setPosition(0.5);
+            pinch_floor.setPosition(0.4);
             rotate_chamber.setPosition(0);
             pinch_chamber.setPosition(0.5);
 
             right_swing.setPosition(0.07);
             left_swing.setPosition(0.07);
         }
+        
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -155,7 +156,6 @@ public class TeleOpMain extends LinearOpMode {
                         if (drawerTimer.seconds() > 0.2) {
                             move(0, false);
                         }
-
                         if (drawersDone(right_horizontal, left_horizontal) && drawerTimer.seconds() > 0.5) {
                             settle_slides();
                             break;
@@ -178,11 +178,18 @@ public class TeleOpMain extends LinearOpMode {
                     pinch_chamber.setPwmDisable();
                     rotate_chamber.setPwmDisable();
                 }
+
+//                right_swing.setPwmEnable();
+//                left_swing.setPwmEnable();
+//                pinch_chamber.setPwmEnable();
+//                rotate_chamber.setPwmEnable();
+
                 else if(gamepad2.left_trigger > 0){
-                    right_swing.setPwmEnable();
-                    left_swing.setPwmEnable();
-                    pinch_chamber.setPwmEnable();
-                    rotate_chamber.setPwmEnable();
+                    right_horizontal.setMotorDisable();
+                    left_horizontal.setMotorDisable();
+                    rotate_floor.setPwmDisable();
+                    flip_floor.setPwmDisable();
+                    pinch_floor.setPwmDisable();
                 }
 
                 //OTHER GAMEPAD2 CONTROLS
@@ -409,13 +416,13 @@ public class TeleOpMain extends LinearOpMode {
             setTargetPosition(0, -movement);
         }else if(byPower){
             holding = true;
-            setTargetPosition(right_horizontal.getCurrentPosition(), 0.5);
+            setTargetPosition(right_horizontal.getCurrentPosition(), 0.4);
         }else if(movement > 4000){
             setTargetPosition(4000);
         }else if(movement < 0){
             setTargetPosition(0);
         }else{
-            setTargetPosition((int)movement);
+            setTargetPositionHolding((int)movement);
         }
     }
 
@@ -458,9 +465,20 @@ public class TeleOpMain extends LinearOpMode {
     }
 
     public void setTargetPosition(int target){
-        setPower(0.8);
+        setPower(1);
         left_horizontal.setTargetPosition(target);
         right_horizontal.setTargetPosition(target);
+    }
+
+    public void setTargetPositionHolding(int target){
+        left_horizontal.setTargetPosition(target);
+        right_horizontal.setTargetPosition(target);
+        if(!drawersDone(right_horizontal, left_horizontal)){
+            setPower(1);
+        }
+        else{
+            setPower(0.2);
+        }
     }
 
     public void setTargetPosition(int target, double power){
