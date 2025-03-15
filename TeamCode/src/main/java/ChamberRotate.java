@@ -27,7 +27,7 @@ public class ChamberRotate extends OpMode {
 
     /** This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method. */
-    private int pathState;
+    private int pathState, cycle_counter;
 
     /** This is our subsystem.
      * We call its methods to manipulate the stuff that it has within the subsystem. */
@@ -35,12 +35,13 @@ public class ChamberRotate extends OpMode {
 
     private ServoImplEx rotate_floor, pinch_floor, flip_floor, right_swing, left_swing, rotate_chamber, pinch_chamber;
 
-    private final Pose startPose = new Pose(9, 63, Math.toRadians(0));
-    private final Pose score1Pose = new Pose(37, 63, Math.toRadians(0));
-    private final Pose score2Pose = new Pose(37, 64, Math.toRadians(0));
-    private final Pose score3Pose = new Pose(37, 65.5, Math.toRadians(0));
-    private final Pose score4Pose = new Pose(37, 69, Math.toRadians(0));
-    private final Pose score5Pose = new Pose(37, 73, Math.toRadians(0));
+    private final Pose startPose = new Pose(9, 72, Math.toRadians(180));
+    private final Pose score1Pose = new Pose(38, 71, Math.toRadians(180));
+    private final Pose score2Pose = new Pose(38, 69, Math.toRadians(180));
+    private final Pose score3Pose = new Pose(38, 68, Math.toRadians(180));
+    private final Pose score4Pose = new Pose(38, 67, Math.toRadians(180));
+    private final Pose score5Pose = new Pose(38, 73, Math.toRadians(0));
+
 
 
     /** Grabbing the specimen from the observation zone */
@@ -49,12 +50,12 @@ public class ChamberRotate extends OpMode {
 
 
     /** Poses for pushing the samples */
-    private final Pose pushPose1 = new Pose(36, 40, Math.toRadians(-57));
-    private final Pose pushForwardPose1 = new Pose(26, 39, Math.toRadians(-145));
-    private final Pose pushPose2 = new Pose(36, 33, Math.toRadians(-57));
-    private final Pose pushForwardPose2 = new Pose(26, 29, Math.toRadians(-145));
-    private final Pose pushPose3 = new Pose(38, 15, Math.toRadians(-46));
-    private final Pose pushForwardPose3 = new Pose(26, 16, Math.toRadians(-160));
+    private final Pose pushPose1 = new Pose(20, 65, Math.toRadians(-45));
+    private final Pose pushForwardPose1 = new Pose(21, 65, Math.toRadians(-135));
+    private final Pose pushPose2 = new Pose(25, 55, Math.toRadians(-45));
+    private final Pose pushForwardPose2 = new Pose(48, 55, Math.toRadians(-95));
+    private final Pose pushPose3 = new Pose(25, 45, Math.toRadians(-45));
+    private final Pose pushForwardPose3 = new Pose(30, 30, Math.toRadians(-135));
     private final Pose moveBackPose = new Pose(20, 20, Math.toRadians(0));
 
     /** Pose for maneuvering around the submersible */
@@ -83,7 +84,6 @@ public class ChamberRotate extends OpMode {
         /* This is our moveBlocks PathChain. We are using multiple paths with a BezierLine, which is a straight line. */
         moveFirstBlock = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(score1Pose), new Point(pushPose1)))
-                .setPathEndTimeoutConstraint(200)
                 .setLinearHeadingInterpolation(score1Pose.getHeading(), pushPose1.getHeading(), 0.5)
                 .build();
 
@@ -94,7 +94,6 @@ public class ChamberRotate extends OpMode {
 
         moveSecondBlock = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(pushForwardPose1), new Point(pushPose2)))
-                .setPathEndTimeoutConstraint(200)
                 .setLinearHeadingInterpolation(pushForwardPose1.getHeading(), pushPose2.getHeading(), 0.5)
                 .build();
 
@@ -194,46 +193,48 @@ public class ChamberRotate extends OpMode {
                 if (pathTimer.getElapsedTimeSeconds() > 0.25) {
                     rotate_chamber.setPosition(0.8);
                 }
-                if(pathTimer.getElapsedTimeSeconds() > 1) {
+                if(pathTimer.getElapsedTimeSeconds() > 0.4) {
                     follower.followPath(scorePreload, true);
                     setPathState(1);
                 }
-                setPathState(1);
                 break;
             case 1:
-                if(!follower.isBusy()) {
-                    //score preloaded speciman
-                    if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.5){
-                        right_swing.setPosition(0.70);
-                        left_swing.setPosition(0.70);
+                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.2){
+                    right_swing.setPosition(0.70);
+                    left_swing.setPosition(0.70);
 
-                        if (pathTimer.getElapsedTimeSeconds() > 2 && right_swing.getPosition() == 0.7) {
-                            pinch_chamber.setPosition(0.5);
+                    if (pathTimer.getElapsedTimeSeconds() > 1.7 && right_swing.getPosition() == 0.7) {
+                        pinch_chamber.setPosition(0.5);
 
-                            right_swing.setPosition(0.07);
-                            left_swing.setPosition(0.07);
-                        }
-                        if (pathTimer.getElapsedTimeSeconds() > 2) {
-                            rotate_chamber.setPosition(0);
-                            follower.followPath(moveFirstBlock, true);
-                            setPathState(2);
-                        }
+                        right_swing.setPosition(0.07);
+                        left_swing.setPosition(0.07);
                     }
+                    if (pathTimer.getElapsedTimeSeconds() > 1.9) {
+                        follower.followPath(moveFirstBlock, true);
+                        setPathState(2);
+                    }
+
+
                 }
                 break;
             case 2:
                 if(!follower.isBusy()) {
+                    rotate_chamber.setPosition(0);
                     slides.setTargetPosition(700);
-                    pinch_floor.setPosition(0.4);
+                    flip_floor.setPosition(0.1);
+                    if(pathTimer.getElapsedTimeSeconds() > 3){
+                        pinch_floor.setPosition(1); //close
 
-                    if(pathTimer.getElapsedTimeSeconds() > 2.2) {
+                    }
+                    if(pathTimer.getElapsedTimeSeconds() > 3.2) {
                         follower.followPath(moveFirstBlockNet, true);
-                        setPathState(3);
+                        //setPathState(3);
                     }
                 }
                 break;
             case 3:
                 if(!follower.isBusy()) {
+                    pinch_floor.setPosition(0.4); //open
                     follower.followPath(moveSecondBlock, true);
                     setPathState(4);
 
@@ -362,35 +363,27 @@ public class ChamberRotate extends OpMode {
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
     @Override
     public void loop() {
-
-        // These loop the movements of the tests.robot
         follower.update();
         autonomousPathUpdate();
-
-        // Feedback to Driver Hub
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
+        telemetry.addData("Path State", pathState);
+        telemetry.addData("Position", follower.getPose().toString());
+        telemetry.addData("cycle_counter", cycle_counter);
         telemetry.update();
-
-
-
     }
 
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
         pathTimer = new Timer();
-        actionTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
         Constants.setConstants(FConstants.class, LConstants.class);
-
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();
+
+        cycle_counter = 0;
 
         slides = new MotorMech2(hardwareMap, cranePower, false);
 
@@ -404,19 +397,20 @@ public class ChamberRotate extends OpMode {
         rotate_chamber = hardwareMap.get(ServoImplEx.class, "rotate_chamber");
         pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
 
-        // Sets the max power to the drive train
-        follower.setMaxPower(1);
-
-        // Set the claw to positions for init
-        rotate_floor.setPosition(0.5);
+        rotate_floor.setPosition(0.1);
         flip_floor.setPosition(0.5);
         rotate_chamber.setPosition(0);
-        pinch_chamber.setPosition(0.95);
+        right_swing.setPosition(0.18);
+        left_swing.setPosition(0.18);
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
-    public void init_loop() {}
+    public void init_loop() {
+        if(gamepad2.circle){
+            pinch_chamber.setPosition(0.95);
+        }
+    }
 
     /** This method is called once at the start of the OpMode.
      * It runs all the setup actions, including building paths and starting the path system **/

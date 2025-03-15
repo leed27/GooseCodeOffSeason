@@ -1,5 +1,7 @@
 package tests;
 
+import com.pedropathing.util.PIDFController;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -83,6 +85,9 @@ public class HangTest extends LinearOpMode {
         right_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_horizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //right_hang.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(0.05, 0.001, 0.01, 0.005));
+        //left_hang.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(0.05, 0.001, 0.01, 0.005));
+
         right_hang.setDirection(DcMotorEx.Direction.REVERSE);
         left_hang.setDirection(DcMotorEx.Direction.FORWARD);
 
@@ -109,7 +114,7 @@ public class HangTest extends LinearOpMode {
                 telemetry.addData("Status", "Running");
                 telemetry.addData("right_hang: ", right_hang.getCurrentPosition());
                 telemetry.addData("left_hang: ", left_hang.getCurrentPosition());
-                telemetry.addData("built", "yay");
+                telemetry.addData("built", "good");
                 //telemetry.addData("mode: ", right_horizontal.getMode());
                 //telemetry.addData("motor state: ", motorState);
 
@@ -117,22 +122,25 @@ public class HangTest extends LinearOpMode {
                 telemetry.update();
 
                 if (gamepad2.triangle) {
-                   movevertically(right_hang, 2800, 1);
-                   movevertically(left_hang, 2800, 1);
+                   movevertically(right_hang, 5100, 1);
+                   movevertically(left_hang, 5100, 1);
                     //moveHang(4250, false);
                 } else if (gamepad2.circle) {
-                    movevertically(right_hang, 380, 1);
-                    movevertically(left_hang, 380, 1);
+                    movevertically(right_hang, 550, 1);
+                    movevertically(left_hang, 550, 1);
                     //moveHang(400, false);
                 } else if (gamepad2.cross) {
-                    movevertically(right_hang, 3550, 1);
-                   movevertically(left_hang, 3550, 1);
+                    movevertically(right_hang, 6700, 1);
+                   movevertically(left_hang, 6700, 1);
                     //moveHang(6300, false); //6300
                 }
 
                 if(gamepad2.right_bumper){
                     movevertically(right_horizontal, 500, 0.2);
                     movevertically(left_horizontal, 500, 0.2);
+                    right_swing.setPosition(0.5);
+                    left_swing.setPosition(0.5);
+
                 }
                 else if(gamepad2.left_bumper){
                     movevertically(right_horizontal, 0, 0.2);

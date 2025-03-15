@@ -224,6 +224,7 @@ public class ChamberPush extends OpMode {
                 }
                 break;
             case 5:
+                pathTimer.resetTimer();
                 //grabs specimen off the wall
                 if(!follower.isBusy()){
                     pinch_chamber.setPosition(0.95);
@@ -262,18 +263,6 @@ public class ChamberPush extends OpMode {
                 break;
             case 7: //Scores specimen
                 if(!follower.isBusy()){
-//                    if(cycle_counter == 4){
-//                        right_swing.setPosition(0.75);
-//                        left_swing.setPosition(0.75);
-//
-//                        if (pathTimer.getElapsedTimeSeconds() > 2.35 && right_swing.getPosition() == 0.7) {
-//                            pinch_chamber.setPosition(0.5);
-//                        }
-//                        if (pathTimer.getElapsedTimeSeconds() > 3) {
-//                            rotate_chamber.setPosition(0);
-//                            setPathState(9);
-//                        }
-//                    }
                         right_swing.setPosition(0.65);
                         left_swing.setPosition(0.65);
 
@@ -284,7 +273,7 @@ public class ChamberPush extends OpMode {
                             right_swing.setPosition(0.07);
                             left_swing.setPosition(0.07);
                         }
-                        if (pathTimer.getElapsedTimeSeconds() > 3) {
+                        if (pathTimer.getElapsedTimeSeconds() > 2.5) {
                             rotate_chamber.setPosition(0);
                             setPathState(8);
                         }
@@ -360,7 +349,7 @@ public class ChamberPush extends OpMode {
         rotate_chamber = hardwareMap.get(ServoImplEx.class, "rotate_chamber");
         pinch_chamber = hardwareMap.get(ServoImplEx.class, "pinch_chamber");
 
-        rotate_floor.setPosition(0.5);
+        rotate_floor.setPosition(0.1);
         flip_floor.setPosition(0.5);
         rotate_chamber.setPosition(0);
         right_swing.setPosition(0.18);
