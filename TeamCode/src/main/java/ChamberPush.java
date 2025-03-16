@@ -26,6 +26,7 @@ import pedroPathing.constants.LConstants;
  * @version 2.0, 11/28/2024
  */
 
+@Disabled
 @Autonomous(name = "ChamberPush", group = "Auton")
 public class ChamberPush extends OpMode {
 

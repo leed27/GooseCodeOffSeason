@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
+@Disabled
 @Autonomous(name = "ChamberRotate", group = "Pedro")
 public class ChamberRotate extends OpMode {
 

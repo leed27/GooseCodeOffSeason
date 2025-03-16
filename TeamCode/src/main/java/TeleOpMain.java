@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@TeleOp(name= "TeleOpMain", group="Linear Opmode")
+@TeleOp(name= "\u2B50 TeleOpMain \u2B50", group="Linear Opmode")
 public class TeleOpMain extends LinearOpMode {
 
     // Declare OpMode members.
@@ -31,6 +31,7 @@ public class TeleOpMain extends LinearOpMode {
     ElapsedTime drawerTimer = new ElapsedTime();
     ElapsedTime servoTimer = new ElapsedTime();
     ElapsedTime controlTimer = new ElapsedTime();
+    ElapsedTime lightTimer = new ElapsedTime();
 
     boolean motorState = true;
 
@@ -60,6 +61,7 @@ public class TeleOpMain extends LinearOpMode {
         drawerTimer.reset();
         controlTimer.reset();
         servoTimer.reset();
+        lightTimer.reset();
 
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -158,8 +160,8 @@ public class TeleOpMain extends LinearOpMode {
                     case TELEOP:
 
                         if (gamepad2.triangle) {
-                            move(700, false);
-                            if (right_horizontal.getCurrentPosition() > 650) {
+                            move(550, false);
+                            if (right_horizontal.getCurrentPosition() > 500) {
                                 rotate_floor.setPosition(0.5);
                             }
                         } else if (gamepad2.circle) {
@@ -205,16 +207,24 @@ public class TeleOpMain extends LinearOpMode {
 
                         if(gamepad2.touchpad && controlTimer.seconds() > 1){
                             flip_floor.setPosition(0);
-                            right_swing.setPosition(0.7);
-                            left_swing.setPosition(0.7);
+                            right_swing.setPosition(0.6);
+                            left_swing.setPosition(0.6);
                             controllerState = controller_state.ENDGAME;
                             controlTimer.reset();
+                            lightTimer.reset();
                         }
 
                         break;
                     case ENDGAME:
-//                        light1.setPosition(0.722);
-//                        light2.setPosition(0.722);
+                        if(lightTimer.seconds() < 2){
+                            light1.setPosition(0.722);
+                            light2.setPosition(0.722);
+                        }
+                        else{
+                            light1.setPosition(0);
+                            light2.setPosition(0);
+                        }
+
 
                         if (gamepad2.triangle) {
                             movevertically(right_hang, 5100, 1);
@@ -230,8 +240,8 @@ public class TeleOpMain extends LinearOpMode {
                         if(gamepad2.right_bumper){
                             movevertically(right_horizontal, 500, 0.2);
                             movevertically(left_horizontal, 500, 0.2);
-                            right_swing.setPosition(0.5);
-                            left_swing.setPosition(0.5);
+                            right_swing.setPosition(0.2);
+                            left_swing.setPosition(0.2);
                         }
                         else if(gamepad2.left_bumper){
                             movevertically(right_horizontal, 0, 0.2);
@@ -341,9 +351,13 @@ public class TeleOpMain extends LinearOpMode {
                 //drivetrain
                 switch(driveState){
                     case DRIVE_FORWARD:
-                        if(controllerState != controller_state.ENDGAME){
-//                            light1.setPosition(0.666);
-//                            light2.setPosition(0.666);
+                        if(lightTimer.seconds() < 2){
+                            light1.setPosition(0.444);
+                            light2.setPosition(0.444);
+                        }
+                        else if(controllerState != controller_state.ENDGAME){
+                            light1.setPosition(0);
+                            light2.setPosition(0);
                         }
 
                         rightFront.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
@@ -352,15 +366,20 @@ public class TeleOpMain extends LinearOpMode {
                         leftRear.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
 
                         if(gamepad1.triangle && controlTimer.seconds() > 1){
+                            lightTimer.reset();
                             driveState = state.DRIVE_BACK;
                             controlTimer.reset();
                         }
 
                         break;
                     case DRIVE_BACK:
-                        if(controllerState != controller_state.ENDGAME){
-//                            light1.setPosition(0.444);
-//                            light2.setPosition(0.444);
+                        if(lightTimer.seconds() < 2){
+                            light1.setPosition(0.444);
+                            light2.setPosition(0.444);
+                        }
+                        else if(controllerState != controller_state.ENDGAME){
+                            light1.setPosition(0);
+                            light2.setPosition(0);
                         }
 
                         rightFront.setPower(((-gamepad1.left_stick_y + -gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
@@ -369,6 +388,7 @@ public class TeleOpMain extends LinearOpMode {
                         leftRear.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x)) + (gamepad1.right_stick_x));
 
                         if(gamepad1.triangle && controlTimer.seconds() > 1){
+                            lightTimer.reset();
                             driveState = state.DRIVE_FORWARD;
                             controlTimer.reset();
                         }
@@ -547,6 +567,24 @@ public class TeleOpMain extends LinearOpMode {
         setPower(power);
         left_horizontal.setTargetPosition(target);
         right_horizontal.setTargetPosition(target);
+    }
+
+    public void gay_lights(){
+        double color = 0.279;
+
+        while(true){
+            if(lightTimer.milliseconds() == 1.9){
+                color += 0.001;
+                light1.setPosition(color);
+                light2.setPosition(color);
+                lightTimer.reset();
+            }
+
+            if(color == 0.722){
+                color = 0.279;
+            }
+        }
+
     }
 
 }

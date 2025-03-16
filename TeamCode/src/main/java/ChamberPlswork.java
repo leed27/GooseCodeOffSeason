@@ -25,7 +25,7 @@ import pedroPathing.constants.LConstants;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "ChamberPlswork", group = "Auton")
+@Autonomous(name = "\u2757 ChamberPlswork \u2757", group = "Auton")
 public class ChamberPlswork extends OpMode {
 
     public MotorMech2 slides;
@@ -54,7 +54,8 @@ public class ChamberPlswork extends OpMode {
 
     /** Start Pose of our tests.robot */
     private final Pose startPose = new Pose(9, 72, Math.toRadians(180));
-    private final Pose scorePrePose = new Pose(39,72, Math.toRadians(180));
+    private final Pose scorePrePose = new Pose(40,72, Math.toRadians(180));
+
     private final Pose pushSplineControl1 = new Pose(20, 30);
     private final Pose pushSplineEnd = new Pose(30, 30, Math.toRadians(180));
     private final Pose returnFirst = new Pose(68,43);
@@ -62,16 +63,18 @@ public class ChamberPlswork extends OpMode {
     private final Pose pushFirst = new Pose(26, 26);
     private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
-    private final Pose pushSecond =  new Pose(24, 15); //25,15
-    private final Pose returnThird = new Pose(70, 15);
-    private final Pose strafeThird = new Pose(70, 8);
-    private final Pose pushThird =  new Pose(17, 9);
+    private final Pose pushSecond =  new Pose(24, 15);
+    private final Pose returnThird = new Pose(75, 17);
+    private final Pose strafeThird = new Pose(70, 2);
+    private final Pose pushThird =  new Pose(20, 8); // x = 17
     private final Pose grabSplineControl = new Pose(28, 32);
+
     private final Pose grabForwardPose = new Pose(8.5, 32, Math.toRadians(180));
     private final Pose grabForwardPose2 = new Pose(8, 32, Math.toRadians(180));
-    private final Pose grabForwardPose3 = new Pose(7.5, 32, Math.toRadians(180));
-    private final Pose grabForwardPose4 = new Pose(7.5, 32, Math.toRadians(180));
-    private final Pose grabPose = new Pose(30, 32);
+    private final Pose grabForwardPose3 = new Pose(8, 32, Math.toRadians(180));
+    private final Pose grabForwardPose4 = new Pose(8, 32, Math.toRadians(180));
+    private final Pose grabPose = new Pose(25, 32); //x = 30
+
     private final Pose scoreFirstPose = new Pose(37.5, 70, Math.toRadians(180));
     private final Pose scoreSecondPose = new Pose(37.5, 69, Math.toRadians(180));
     private final Pose safetyScore = new Pose(37.5, 69, Math.toRadians(180));
@@ -114,7 +117,8 @@ public class ChamberPlswork extends OpMode {
 //                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         grabSpline = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(pushThird), new Point(grabSplineControl), new Point(grabForwardPose)))
+                //.addPath(new BezierCurve(new Point(pushThird), new Point(grabSplineControl), new Point(grabForwardPose)))
+                .addPath(new BezierLine(new Point(pushThird), new Point(grabForwardPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         scoreFirst = follower.pathBuilder()
@@ -134,23 +138,17 @@ public class ChamberPlswork extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         grabSecond = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scoreFirstPose), new Point(grabPose)))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose2)))
+                .addPath(new BezierCurve(new Point(scoreFirstPose), new Point(grabPose), new Point(grabForwardPose2)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 //.setZeroPowerAccelerationMultiplier(3.2)
                 .build();
         grabThird = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scoreSecondPose), new Point(grabPose)))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose3)))
+                .addPath(new BezierCurve(new Point(scoreSecondPose), new Point(grabPose), new Point(grabForwardPose3)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 //.setZeroPowerAccelerationMultiplier(2)
                 .build();
         grabFourth = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scoreThirdPose), new Point(grabPose)))
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierLine(new Point(grabPose), new Point(grabForwardPose4)))
+                .addPath(new BezierCurve(new Point(scoreThirdPose), new Point(grabPose), new Point(grabForwardPose4)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 //.setZeroPowerAccelerationMultiplier(2)
                 .build();
@@ -175,16 +173,17 @@ public class ChamberPlswork extends OpMode {
                 break;
             case 1:
                 if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 1.2){
-                    right_swing.setPosition(0.70);
-                    left_swing.setPosition(0.70);
+                    right_swing.setPosition(0.65);
+                    left_swing.setPosition(0.65);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 1.7 && right_swing.getPosition() == 0.7) {
+                    if (pathTimer.getElapsedTimeSeconds() > 1.6){
                         pinch_chamber.setPosition(0.5);
 
                         right_swing.setPosition(0.07);
                         left_swing.setPosition(0.07);
                     }
-                    if (pathTimer.getElapsedTimeSeconds() > 1.9) {
+
+                    if(pathTimer.getElapsedTimeSeconds() > 1.8){
                         rotate_chamber.setPosition(0);
                         setPathState(2);
                     }
@@ -210,15 +209,15 @@ public class ChamberPlswork extends OpMode {
                 break;
             case 5:
                 //grabs specimen off the wall
-                if(follower.getPose().getX() < 9.1){
+                if(follower.getPose().getX() < 9.87){
                     pinch_chamber.setPosition(0.95);
 
-                    if (pathTimer.getElapsedTimeSeconds() > 2.7) {
+                    if (pathTimer.getElapsedTimeSeconds() > 2) {
                         right_swing.setPosition(0.52); //prep score
                         left_swing.setPosition(0.52);
                     }
 
-                    if(pathTimer.getElapsedTimeSeconds() > 2.8){
+                    if(pathTimer.getElapsedTimeSeconds() > 2.1){
                         rotate_chamber.setPosition(0.8);
                         cycle_counter++;
                         setPathState(6);
@@ -304,8 +303,8 @@ public class ChamberPlswork extends OpMode {
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
     @Override
     public void loop() {
-        //light1.setPosition(0.722);
-        //light2.setPosition(0.722);
+        light1.setPosition(0);
+        light2.setPosition(0);
 
         follower.update();
         autonomousPathUpdate();
@@ -345,7 +344,7 @@ public class ChamberPlswork extends OpMode {
         light2 = hardwareMap.get(Servo.class, "light2");
 
         //rotate_floor.setPosition(0.1);
-        //flip_floor.setPosition(0.5);
+        flip_floor.setPosition(0.5);
         rotate_chamber.setPosition(0);
         right_swing.setPosition(0.18);
         left_swing.setPosition(0.18);
@@ -357,6 +356,9 @@ public class ChamberPlswork extends OpMode {
         if(gamepad2.circle){
             pinch_chamber.setPosition(0.95);
         }
+
+        light1.setPosition(0.722);
+        light2.setPosition(0.722);
     }
 
     /** This method is called once at the start of the OpMode.

@@ -1,11 +1,14 @@
 package tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name= "tests.ServoTester", group="Linear Opmode")
+@Disabled
+
+@TeleOp(name= "ServoTester", group="Linear Opmode")
 //@Disabled
 public class ServoTester extends LinearOpMode {
 

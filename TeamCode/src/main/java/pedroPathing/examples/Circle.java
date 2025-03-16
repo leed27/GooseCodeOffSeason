@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.pedropathing.follower.Follower;
@@ -27,6 +28,7 @@ import pedroPathing.constants.LConstants;
  * @version 1.0, 3/12/2024
  */
 @Config
+@Disabled
 @Autonomous (name = "Circle", group = "Examples")
 public class Circle extends OpMode {
     private Telemetry telemetryA;
