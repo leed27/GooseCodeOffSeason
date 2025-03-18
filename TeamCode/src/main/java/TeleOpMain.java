@@ -216,7 +216,7 @@ public class TeleOpMain extends LinearOpMode {
 
                         break;
                     case ENDGAME:
-                        if(lightTimer.seconds() < 2){
+                        if(lightTimer.seconds() < 1){
                             light1.setPosition(0.722);
                             light2.setPosition(0.722);
                         }
@@ -227,14 +227,14 @@ public class TeleOpMain extends LinearOpMode {
 
 
                         if (gamepad2.triangle) {
-                            movevertically(right_hang, 5100, 1);
-                            movevertically(left_hang, 5100, 1);
+                            movevertically(right_hang, 6800, 1);
+                            movevertically(left_hang, 6800, 1);
                         } else if (gamepad2.circle) {
-                            movevertically(right_hang, 550, 1);
-                            movevertically(left_hang, 550, 1);
+                            movevertically(right_hang, 850, 1);
+                            movevertically(left_hang, 850, 1);
                         } else if (gamepad2.cross) {
-                            movevertically(right_hang, 6700, 1);
-                            movevertically(left_hang, 6700, 1);
+                            movevertically(right_hang, 8900, 1);
+                            movevertically(left_hang, 8900, 1);
                         }
 
                         if(gamepad2.right_bumper){
@@ -290,7 +290,7 @@ public class TeleOpMain extends LinearOpMode {
                             left_swing.setPosition(0.52); //prep score
                         }
 
-                        if (servoTimer.seconds() > 0.25) {
+                        if (servoTimer.seconds() > 0.35) {
                             rotate_chamber.setPosition(0.8);
                         }
                     }
@@ -298,18 +298,18 @@ public class TeleOpMain extends LinearOpMode {
 
                 if (gamepad1.cross) {
                     servoTimer.reset();
-                    right_swing.setPosition(0.75);
-                    left_swing.setPosition(0.75); // score
+                    right_swing.setPosition(0.76);
+                    left_swing.setPosition(0.76); // score
 
                     while (gamepad1.cross) {
 
-                        if (servoTimer.seconds() > 0.1) {
+                        if (servoTimer.seconds() > 0.3) {
                             pinch_chamber.setPosition(0.5);
 
                             right_swing.setPosition(0.07);
                             left_swing.setPosition(0.07);
                         }
-                        if (servoTimer.seconds() > 0.2) {
+                        if (servoTimer.seconds() > 0.4) {
                             rotate_chamber.setPosition(0);
                         }
                     }
@@ -351,7 +351,7 @@ public class TeleOpMain extends LinearOpMode {
                 //drivetrain
                 switch(driveState){
                     case DRIVE_FORWARD:
-                        if(lightTimer.seconds() < 2){
+                        if(lightTimer.seconds() < 1 && controllerState != controller_state.ENDGAME){
                             light1.setPosition(0.444);
                             light2.setPosition(0.444);
                         }
@@ -373,7 +373,7 @@ public class TeleOpMain extends LinearOpMode {
 
                         break;
                     case DRIVE_BACK:
-                        if(lightTimer.seconds() < 2){
+                        if(lightTimer.seconds() < 1 && controllerState != controller_state.ENDGAME){
                             light1.setPosition(0.444);
                             light2.setPosition(0.444);
                         }

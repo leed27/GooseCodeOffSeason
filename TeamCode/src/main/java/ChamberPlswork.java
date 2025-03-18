@@ -61,25 +61,26 @@ public class ChamberPlswork extends OpMode {
     private final Pose returnFirst = new Pose(68,43);
     private final Pose strafeFirst = new Pose(56, 25);
     private final Pose pushFirst = new Pose(26, 26);
-    private final Pose returnSecond = new Pose(56, 25);
+    private final Pose returnSecond = new Pose(58, 27);
+    //    private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
     private final Pose pushSecond =  new Pose(24, 15);
     private final Pose returnThird = new Pose(75, 17);
     private final Pose strafeThird = new Pose(70, 2);
-    private final Pose pushThird =  new Pose(20, 8); // x = 17
+    private final Pose pushThird =  new Pose(20, 8.5); // x = 17
     private final Pose grabSplineControl = new Pose(28, 32);
 
-    private final Pose grabForwardPose = new Pose(8.5, 32, Math.toRadians(180));
-    private final Pose grabForwardPose2 = new Pose(8, 32, Math.toRadians(180));
-    private final Pose grabForwardPose3 = new Pose(8, 32, Math.toRadians(180));
-    private final Pose grabForwardPose4 = new Pose(8, 32, Math.toRadians(180));
+    private final Pose grabForwardPose = new Pose(9, 32, Math.toRadians(180));
+    private final Pose grabForwardPose2 = new Pose(9, 32, Math.toRadians(180));
+    private final Pose grabForwardPose3 = new Pose(9, 32, Math.toRadians(180));
+    private final Pose grabForwardPose4 = new Pose(9, 32, Math.toRadians(180));
     private final Pose grabPose = new Pose(25, 32); //x = 30
 
-    private final Pose scoreFirstPose = new Pose(37.5, 70, Math.toRadians(180));
-    private final Pose scoreSecondPose = new Pose(37.5, 69, Math.toRadians(180));
-    private final Pose safetyScore = new Pose(37.5, 69, Math.toRadians(180));
-    private final Pose scoreThirdPose = new Pose(37.5, 68, Math.toRadians(180));
-    private final Pose scoreFourthPose = new Pose(37.5, 67, Math.toRadians(180));
+    private final Pose scoreFirstPose = new Pose(40, 70, Math.toRadians(180));
+    private final Pose scoreSecondPose = new Pose(40, 69, Math.toRadians(180));
+    private final Pose safetyScore = new Pose(40, 69, Math.toRadians(180));
+    private final Pose scoreThirdPose = new Pose(40, 68, Math.toRadians(180));
+    private final Pose scoreFourthPose = new Pose(40, 67, Math.toRadians(180));
     private final Pose parkPose = new Pose(12, 10);
 
 
@@ -209,7 +210,7 @@ public class ChamberPlswork extends OpMode {
                 break;
             case 5:
                 //grabs specimen off the wall
-                if(follower.getPose().getX() < 9.87){
+                if(follower.getPose().getX() < 11 && cycle_counter != 0){
                     pinch_chamber.setPosition(0.95);
 
                     if (pathTimer.getElapsedTimeSeconds() > 2) {
@@ -248,7 +249,7 @@ public class ChamberPlswork extends OpMode {
                 if(!follower.isBusy()){
                         right_swing.setPosition(0.65);
                         left_swing.setPosition(0.65);
-                        if(pathTimer.getElapsedTimeSeconds() > 2){
+                        if(pathTimer.getElapsedTimeSeconds() > 2.25){
                             setPathState(8);
                         }
                 }
@@ -357,8 +358,8 @@ public class ChamberPlswork extends OpMode {
             pinch_chamber.setPosition(0.95);
         }
 
-        light1.setPosition(0.722);
-        light2.setPosition(0.722);
+        //light1.setPosition(0.722);
+        //light2.setPosition(0.722);
     }
 
     /** This method is called once at the start of the OpMode.
