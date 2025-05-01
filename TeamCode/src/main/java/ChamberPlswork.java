@@ -210,7 +210,7 @@ public class ChamberPlswork extends OpMode {
                 break;
             case 5:
                 //grabs specimen off the wall
-                if(follower.getPose().getX() < 11.7 && cycle_counter != 0){
+                if(follower.getPose().getX() < 11){
                     pinch_chamber.setPosition(0.95);
 
                     if (pathTimer.getElapsedTimeSeconds() > 2) {
