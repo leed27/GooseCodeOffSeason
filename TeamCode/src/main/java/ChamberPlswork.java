@@ -65,15 +65,16 @@ public class ChamberPlswork extends OpMode {
     //    private final Pose returnSecond = new Pose(56, 25);
     private final Pose strafeSecond = new Pose(56, 15);
     private final Pose pushSecond =  new Pose(24, 15);
-    private final Pose returnThird = new Pose(75, 17);
-    private final Pose strafeThird = new Pose(70, 2);
+    private final Pose returnThird = new Pose(80, 15); //suggested old 75, 17
+    private final Pose strafeThird = new Pose(70, 4); //old y = 5
     private final Pose pushThird =  new Pose(20, 8.5); // x = 17
     private final Pose grabSplineControl = new Pose(28, 32);
 
+    //old x = 9
     private final Pose grabForwardPose = new Pose(9, 32, Math.toRadians(180));
-    private final Pose grabForwardPose2 = new Pose(9, 32, Math.toRadians(180));
-    private final Pose grabForwardPose3 = new Pose(9, 32, Math.toRadians(180));
-    private final Pose grabForwardPose4 = new Pose(9, 32, Math.toRadians(180));
+    private final Pose grabForwardPose2 = new Pose(8.7, 32, Math.toRadians(180));
+    private final Pose grabForwardPose3 = new Pose(8.3, 32, Math.toRadians(180));
+    private final Pose grabForwardPose4 = new Pose(8.3, 32, Math.toRadians(180));
     private final Pose grabPose = new Pose(25, 32); //x = 30
 
     private final Pose scoreFirstPose = new Pose(40, 70, Math.toRadians(180));
@@ -141,17 +142,17 @@ public class ChamberPlswork extends OpMode {
         grabSecond = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(scoreFirstPose), new Point(grabPose), new Point(grabForwardPose2)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                //.setZeroPowerAccelerationMultiplier(3.2)
+                .setZeroPowerAccelerationMultiplier(3.2)
                 .build();
         grabThird = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(scoreSecondPose), new Point(grabPose), new Point(grabForwardPose3)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                //.setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
         grabFourth = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(scoreThirdPose), new Point(grabPose), new Point(grabForwardPose4)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                //.setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
         parkGood = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(grabForwardPose), new Point(parkPose)))
@@ -347,8 +348,8 @@ public class ChamberPlswork extends OpMode {
         //rotate_floor.setPosition(0.1);
         flip_floor.setPosition(0.5);
         rotate_chamber.setPosition(0);
-        right_swing.setPosition(0.18);
-        left_swing.setPosition(0.18);
+        right_swing.setPosition(0.2);
+        left_swing.setPosition(0.2);
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
@@ -367,6 +368,8 @@ public class ChamberPlswork extends OpMode {
     @Override
     public void start() {
         opmodeTimer.resetTimer();
+
+
         setPathState(0);
     }
 

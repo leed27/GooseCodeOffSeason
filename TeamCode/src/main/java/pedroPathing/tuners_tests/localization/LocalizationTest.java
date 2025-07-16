@@ -40,7 +40,7 @@ import pedroPathing.constants.*;
  * @version 1.0, 5/6/2024
  */
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp(group = "Teleop Test", name = "Localization Test")
 public class LocalizationTest extends OpMode {

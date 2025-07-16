@@ -116,7 +116,7 @@ public class TeleOpMain extends LinearOpMode {
         while(opModeInInit()){
             rotate_floor.setPosition(0.5);
             flip_floor.setPosition(0.5);
-            pinch_floor.setPosition(0.4);
+            pinch_floor.setPosition(0.45);
             rotate_chamber.setPosition(0);
             pinch_chamber.setPosition(0.5);
 
@@ -277,7 +277,7 @@ public class TeleOpMain extends LinearOpMode {
                 }
 
                 if (gamepad1.left_bumper) {
-                    pinch_floor.setPosition(0.4); //open
+                    pinch_floor.setPosition(0.45); //open
                 }
 
                 if (gamepad1.right_trigger > 0) {
